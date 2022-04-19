@@ -35,13 +35,17 @@
       >
         <el-table-column type="selection" width="55" />
 
-        <el-table-column align="left" label="推文id" prop="contentId" :show-overflow-tooltip="true" width="120" />
+        <el-table-column align="left" label="推文id"  :show-overflow-tooltip="true" width="120" >
+          <template #default="scope"><el-link type="primary" :href=scope.row.permanentUrl target="_blank">{{ scope.row.contentId }}</el-link></template>
+        </el-table-column>
         <el-table-column align="left" label="用户id" prop="userId" width="120" />
         <el-table-column align="left" label="Twitter名称" prop="userName" width="120" />
-        <el-table-column align="left" label="内容" prop="content" :show-overflow-tooltip="true" width="120" />
+        <el-table-column align="left" label="内容" :show-overflow-tooltip="true" width="120" >
+          <template #default="scope"><el-link @click="openContentDialog(scope.row)" type="primary">{{ scope.row.content }}</el-link></template>
+        </el-table-column>
         <el-table-column align="left" label="类型" prop="contentTypeName" width="120" />
-        <el-table-column align="left" label="sub_type" prop="subTypeId" width="120" />
-        <el-table-column align="left" label="标签" prop="hashTags" width="120" />
+<!--        <el-table-column align="left" label="sub_type" prop="subTypeId" width="120" />-->
+<!--        <el-table-column align="left" label="标签" prop="hashTags" width="120" />-->
         <el-table-column align="left" label="是否置顶" prop="isPin" width="80">
           <template #default="scope">{{ formatBoolean(scope.row.isPin) }}</template>
         </el-table-column>
@@ -57,13 +61,17 @@
         <el-table-column align="left" label="喜欢数" prop="likes" width="80" />
         <el-table-column align="left" label="回复数" prop="replies" width="80" />
         <el-table-column align="left" label="转载数" prop="retweets" width="80" />
-        <el-table-column align="left" label="推文地址" prop="permanentUrl" :show-overflow-tooltip="true"  width="120" />
-        <el-table-column align="left" label="图片地址" prop="photos" :show-overflow-tooltip="true"  width="120" />
+<!--        <el-table-column align="left" label="推文地址" prop="permanentUrl" :show-overflow-tooltip="true"  width="120" />-->
+<!--        <el-table-column align="left" label="图片地址" :show-overflow-tooltip="true"  width="120">-->
+<!--          <template #default="scope">-->
+<!--            <CustomPic style="margin-top:8px" pic-type="tAvatar" :pic-src="scope.row.photos" />-->
+<!--          </template>-->
+<!--        </el-table-column>-->
         <el-table-column align="left" label="发布时间" prop="timeParsed" width="180" >
           <template #default="scope">{{ formatDate(scope.row.timeParsed) }}</template>
         </el-table-column>
-        <el-table-column align="left" label="链接地址" prop="urls" :show-overflow-tooltip="true" width="120" />
-        <el-table-column align="left" label="视频地址" prop="videosUrl" :show-overflow-tooltip="true" width="120" />
+<!--        <el-table-column align="left" label="链接地址" prop="urls" :show-overflow-tooltip="true" width="120" />-->
+<!--        <el-table-column align="left" label="视频地址" prop="videosUrl" :show-overflow-tooltip="true" width="120" />-->
         <el-table-column align="left" label="创建时间" width="180">
           <template #default="scope">{{ formatDate(scope.row.CreatedAt) }}</template>
         </el-table-column>
@@ -162,6 +170,10 @@
         </div>
       </template>
     </el-dialog>
+    <el-dialog width="80%" v-model="contentVisible" :before-close="closeContentDialog" title="twitter详情">
+      <div v-html="rowData.html"></div>
+<!--      <el-input :rows="10" type="textarea" v-html="rowData.html"></el-input>-->
+    </el-dialog>
   </div>
 </template>
 
@@ -182,6 +194,7 @@ import {
 } from '@/api/tTwitterContent'
 
 // 全量引入格式化工具 请按需保留
+import CustomPic from '@/components/customPic/index.vue'
 import { getDictFunc, formatDate, formatBoolean, filterDict } from '@/utils/format'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref } from 'vue'
@@ -224,7 +237,17 @@ const systemList = ref([])
 const onReset = () => {
   searchInfo.value = {}
 }
+const rowData = ref([])
+const contentVisible = ref(false)
 
+const openContentDialog = (row) => {
+  contentVisible.value = true
+  rowData.value = row
+}
+
+const closeContentDialog = () => {
+  contentVisible.value = false
+}
 // 搜索
 const onSubmit = () => {
   page.value = 1

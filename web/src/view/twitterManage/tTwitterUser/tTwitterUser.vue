@@ -34,20 +34,32 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column align="left" label="推特id" prop="userId" width="120" />
-        <el-table-column align="left" label="Twitter名称" prop="userName" width="120" />
+        <el-table-column align="left" label="推特id" prop="userId" width="150" />
+        <el-table-column align="left" label="Twitter名称" width="150" >
+          <template #default="scope"><el-link type="primary" :href="'https://twitter.com/'+ scope.row.userName" target="_blank">{{ scope.row.userName }}</el-link></template>
+        </el-table-column>
         <el-table-column align="left" label="类别" prop="userTypeName" width="120" />
-        <el-table-column align="left" label="头像url" :show-overflow-tooltip="true" prop="avatarUrl" width="120" />
-        <el-table-column align="left" label="背景url" :show-overflow-tooltip="true" prop="bannerUrl" width="120" />
+        <el-table-column align="left" label="头像url" :show-overflow-tooltip="true" width="120">
+          <template #default="scope">
+            <CustomPic style="margin-top:8px" pic-type="tAvatar" :pic-src="scope.row.avatarUrl" />
+          </template>
+        </el-table-column>
+        <el-table-column align="left" label="背景url" :show-overflow-tooltip="true" width="120">
+          <template #default="scope">
+            <CustomPic style="margin-top:8px" pic-type="tAvatar" :pic-src="scope.row.bannerUrl" />
+          </template>
+        </el-table-column>
         <el-table-column align="left" label="个人介绍" :show-overflow-tooltip="true" prop="biography" width="120" />
-        <el-table-column align="left" label="推特地址" :show-overflow-tooltip="true" prop="websiteUrl" width="120" />
+        <el-table-column align="left" label="个人地址" :show-overflow-tooltip="true" width="120">
+          <template #default="scope"><el-link type="primary" :href=scope.row.websiteUrl target="_blank">{{ scope.row.websiteUrl }}</el-link></template>
+        </el-table-column>
+        <el-table-column align="left" label="推文数" prop="tweetsCount" width="120" />
         <el-table-column align="left" label="位置" prop="location" width="120" />
         <el-table-column align="left" label="出生日期" prop="birthday" width="120" />
         <el-table-column align="left" label="喜欢数" prop="likesCount" width="120" />
         <el-table-column align="left" label="粉丝数" prop="followersCount" width="120" />
         <el-table-column align="left" label="追随数" prop="followingCount" width="120" />
         <el-table-column align="left" label="好友数" prop="friendsCount" width="120" />
-        <el-table-column align="left" label="推文数" prop="tweetsCount" width="120" />
         <el-table-column align="left" label="是否私有" prop="isPrivate" width="120">
           <template #default="scope">{{ formatBoolean(scope.row.isPrivate) }}</template>
         </el-table-column>
@@ -168,6 +180,7 @@ import { getDictFunc, formatDate, formatBoolean, filterDict } from '@/utils/form
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref } from 'vue'
 import { getTSystemAll } from '@/api/tSystem'
+import CustomPic from '@/components/customPic/index.vue'
 
 // 自动化生成的字典（可能为空）以及字段
 const formData = ref({

@@ -11,6 +11,10 @@
     <template v-if="picType === 'file'">
       <img :src="file" class="file">
     </template>
+    <template v-if="picType === 'tAvatar'">
+      <el-avatar v-if="userStore.userInfo.headerImg" :size="80" :src="tAvatar" />
+      <el-avatar v-else :size="80" :src="noAvatar" />
+    </template>
   </span>
 </template>
 
@@ -41,6 +45,17 @@ const path = ref(import.meta.env.VITE_BASE_API + '/')
 const noAvatar = ref(noAvatarPng)
 
 const userStore = useUserStore()
+
+const tAvatar = computed(() => {
+  if (props.picSrc === '') {
+    return noAvatar
+  } else {
+    if (props.picSrc !== '' && props.picSrc.slice(0, 4) === 'http') {
+      return props.picSrc
+    }
+    return path.value + props.picSrc
+  }
+})
 
 const avatar = computed(() => {
   if (props.picSrc === '') {
