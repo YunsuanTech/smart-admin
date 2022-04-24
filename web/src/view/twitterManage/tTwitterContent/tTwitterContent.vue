@@ -35,12 +35,12 @@
       >
         <el-table-column type="selection" width="55" />
 
-        <el-table-column align="left" label="推文id"  :show-overflow-tooltip="true" width="120" >
-          <template #default="scope"><el-link type="primary" :href=scope.row.permanentUrl target="_blank">{{ scope.row.contentId }}</el-link></template>
-        </el-table-column>
-        <el-table-column align="left" label="用户id" prop="userId" width="120" />
+<!--        <el-table-column align="left" label="推文id"  :show-overflow-tooltip="true" width="120" >-->
+<!--          <template #default="scope"><el-link type="primary" :href=scope.row.permanentUrl target="_blank">{{ scope.row.contentId }}</el-link></template>-->
+<!--        </el-table-column>-->
+<!--        <el-table-column align="left" label="用户id" prop="userId" width="120" />-->
         <el-table-column align="left" label="Twitter名称" prop="userName" width="120" />
-        <el-table-column align="left" label="内容" :show-overflow-tooltip="true" width="120" >
+        <el-table-column align="left" label="内容" :show-overflow-tooltip="true" width="1400" >
           <template #default="scope"><el-link @click="openContentDialog(scope.row)" type="primary">{{ scope.row.content }}</el-link></template>
         </el-table-column>
         <el-table-column align="left" label="类型" prop="contentTypeName" width="120" />
@@ -229,7 +229,7 @@ const formData = ref({
 // =========== 表格控制部分 ===========
 const page = ref(1)
 const total = ref(0)
-const pageSize = ref(10)
+const pageSize = ref(50)
 const tableData = ref([])
 const searchInfo = ref({})
 const systemList = ref([])
