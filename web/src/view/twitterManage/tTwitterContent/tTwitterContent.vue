@@ -34,16 +34,15 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
-
-<!--        <el-table-column align="left" label="推文id"  :show-overflow-tooltip="true" width="120" >-->
-<!--          <template #default="scope"><el-link type="primary" :href=scope.row.permanentUrl target="_blank">{{ scope.row.contentId }}</el-link></template>-->
-<!--        </el-table-column>-->
 <!--        <el-table-column align="left" label="用户id" prop="userId" width="120" />-->
-        <el-table-column align="left" label="Twitter名称" prop="userName" width="120" />
+        <el-table-column align="left" label="Twitter名称" prop="userName" width="130" />
         <el-table-column align="left" label="内容" :show-overflow-tooltip="true" width="1400" >
           <template #default="scope"><el-link @click="openContentDialog(scope.row)" type="primary">{{ scope.row.content }}</el-link></template>
         </el-table-column>
         <el-table-column align="left" label="类型" prop="contentTypeName" width="120" />
+<!--        <el-table-column align="left" label="推文id"  :show-overflow-tooltip="true" width="120" >-->
+<!--          <template #default="scope"><el-link type="primary" :href=scope.row.permanentUrl target="_blank">{{ scope.row.contentId }}</el-link></template>-->
+<!--        </el-table-column>-->
 <!--        <el-table-column align="left" label="sub_type" prop="subTypeId" width="120" />-->
 <!--        <el-table-column align="left" label="标签" prop="hashTags" width="120" />-->
         <el-table-column align="left" label="是否置顶" prop="isPin" width="80">
@@ -172,6 +171,7 @@
     </el-dialog>
     <el-dialog width="80%" v-model="contentVisible" :before-close="closeContentDialog" title="twitter详情">
       <div v-html="rowData.html"></div>
+      <el-link :href=rowData.permanentUrl target="_blank" type="success">跳转twitter</el-link>
 <!--      <el-input :rows="10" type="textarea" v-html="rowData.html"></el-input>-->
     </el-dialog>
   </div>
