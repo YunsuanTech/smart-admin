@@ -57,10 +57,11 @@ func (tTwitterContentService *TTwitterContentService) GetTTwitterContentInfoList
 	if info.UserName != "" {
 		db = db.Where("`user_name` LIKE ?", "%"+info.UserName+"%")
 	}
+
 	err = db.Count(&total).Error
 	if err != nil {
 		return
 	}
-	err = db.Limit(limit).Offset(offset).Find(&tTwitterContents).Error
+	err = db.Order("time_parsed desc").Limit(limit).Offset(offset).Find(&tTwitterContents).Error
 	return err, tTwitterContents, total
 }
