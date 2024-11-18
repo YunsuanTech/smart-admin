@@ -1,33 +1,49 @@
 <template>
-  <span class="headerAvatar">
+  <span class="headerAvatar ">
     <template v-if="picType === 'avatar'">
-      <el-avatar v-if="userStore.userInfo.headerImg" :size="30" :src="avatar" />
-      <el-avatar v-else :size="30" :src="noAvatar" />
+      <el-avatar
+        v-if="userStore.userInfo.headerImg"
+        :size="30"
+        :src="avatar"
+      />
+      <el-avatar
+        v-else
+        :size="30"
+        :src="noAvatar"
+      />
     </template>
     <template v-if="picType === 'img'">
-      <img v-if="userStore.userInfo.headerImg" :src="avatar" class="avatar">
-      <img v-else :src="noAvatar" class="avatar">
+      <img
+        v-if="userStore.userInfo.headerImg"
+        :src="avatar"
+        class="avatar"
+      >
+      <img
+        v-else
+        :src="noAvatar"
+        class="avatar"
+      >
     </template>
     <template v-if="picType === 'file'">
-      <img :src="file" class="file">
-    </template>
-    <template v-if="picType === 'tAvatar'">
-      <el-avatar v-if="userStore.userInfo.headerImg" :size="80" :src="tAvatar" />
-      <el-avatar v-else :size="80" :src="noAvatar" />
+      <el-image
+        :src="file"
+        class="file"
+        :preview-src-list="previewSrcList"
+        :preview-teleported="true"
+      />
     </template>
   </span>
 </template>
-
-<script>
-export default {
-  name: 'CustomPic'
-}
-</script>
 
 <script setup>
 import noAvatarPng from '@/assets/noBody.png'
 import { useUserStore } from '@/pinia/modules/user'
 import { computed, ref } from 'vue'
+
+defineOptions({
+  name: 'CustomPic'
+})
+
 const props = defineProps({
   picType: {
     type: String,
@@ -38,6 +54,10 @@ const props = defineProps({
     type: String,
     required: false,
     default: ''
+  },
+  preview: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -45,17 +65,6 @@ const path = ref(import.meta.env.VITE_BASE_API + '/')
 const noAvatar = ref(noAvatarPng)
 
 const userStore = useUserStore()
-
-const tAvatar = computed(() => {
-  if (props.picSrc === '') {
-    return noAvatar
-  } else {
-    if (props.picSrc !== '' && props.picSrc.slice(0, 4) === 'http') {
-      return props.picSrc
-    }
-    return path.value + props.picSrc
-  }
-})
 
 const avatar = computed(() => {
   if (props.picSrc === '') {
@@ -76,6 +85,7 @@ const file = computed(() => {
   }
   return props.picSrc
 })
+const previewSrcList = computed(() => props.preview ? [file.value] : [])
 
 </script>
 

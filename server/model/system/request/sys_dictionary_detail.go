@@ -1,8 +1,8 @@
 package request
 
 import (
-	"smart-admin/server/model/common/request"
-	"smart-admin/server/model/system"
+	"github.com/flipped-aurora/gin-vue-admin/server/model/common/request"
+	"github.com/flipped-aurora/gin-vue-admin/server/model/system"
 )
 
 type SysDictionaryDetailSearch struct {

@@ -1,17 +1,22 @@
 package config
 
+import (
+	"path/filepath"
+	"strings"
+)
+
 type Autocode struct {
-	TransferRestart bool   `mapstructure:"transfer-restart" json:"transferRestart" yaml:"transfer-restart"`
-	Root            string `mapstructure:"root" json:"root" yaml:"root"`
-	Server          string `mapstructure:"server" json:"server" yaml:"server"`
-	SApi            string `mapstructure:"server-api" json:"serverApi" yaml:"server-api"`
-	SInitialize     string `mapstructure:"server-initialize" json:"serverInitialize" yaml:"server-initialize"`
-	SModel          string `mapstructure:"server-model" json:"serverModel" yaml:"server-model"`
-	SRequest        string `mapstructure:"server-request" json:"serverRequest"  yaml:"server-request"`
-	SRouter         string `mapstructure:"server-router" json:"serverRouter" yaml:"server-router"`
-	SService        string `mapstructure:"server-service" json:"serverService" yaml:"server-service"`
-	Web             string `mapstructure:"web" json:"web" yaml:"web"`
-	WApi            string `mapstructure:"web-api" json:"webApi" yaml:"web-api"`
-	WForm           string `mapstructure:"web-form" json:"webForm" yaml:"web-form"`
-	WTable          string `mapstructure:"web-table" json:"webTable" yaml:"web-table"`
+	Web    string `mapstructure:"web" json:"web" yaml:"web"`
+	Root   string `mapstructure:"root" json:"root" yaml:"root"`
+	Server string `mapstructure:"server" json:"server" yaml:"server"`
+	Module string `mapstructure:"module" json:"module" yaml:"module"`
+	AiPath string `mapstructure:"ai-path" json:"ai-path" yaml:"ai-path"`
+}
+
+func (a *Autocode) WebRoot() string {
+	webs := strings.Split(a.Web, "/")
+	if len(webs) == 0 {
+		webs = strings.Split(a.Web, "\\")
+	}
+	return filepath.Join(webs...)
 }

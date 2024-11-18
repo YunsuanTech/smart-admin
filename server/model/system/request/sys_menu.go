@@ -1,20 +1,20 @@
 package request
 
 import (
-	"smart-admin/server/global"
-	"smart-admin/server/model/system"
+	"github.com/flipped-aurora/gin-vue-admin/server/global"
+	"github.com/flipped-aurora/gin-vue-admin/server/model/system"
 )
 
 // Add menu authority info structure
 type AddMenuAuthorityInfo struct {
 	Menus       []system.SysBaseMenu `json:"menus"`
-	AuthorityId string               `json:"authorityId"` // 角色ID
+	AuthorityId uint                 `json:"authorityId"` // 角色ID
 }
 
 func DefaultMenu() []system.SysBaseMenu {
 	return []system.SysBaseMenu{{
 		GVA_MODEL: global.GVA_MODEL{ID: 1},
-		ParentId:  "0",
+		ParentId:  0,
 		Path:      "dashboard",
 		Name:      "dashboard",
 		Component: "view/dashboard/index.vue",

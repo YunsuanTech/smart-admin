@@ -3,23 +3,33 @@ package middleware
 import (
 	"bytes"
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
-	"smart-admin/server/utils"
+	"github.com/flipped-aurora/gin-vue-admin/server/utils"
 
+	"github.com/flipped-aurora/gin-vue-admin/server/global"
+	"github.com/flipped-aurora/gin-vue-admin/server/model/system"
+	"github.com/flipped-aurora/gin-vue-admin/server/service"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"smart-admin/server/global"
-	"smart-admin/server/model/system"
-	"smart-admin/server/service"
 )
 
 var operationRecordService = service.ServiceGroupApp.SystemServiceGroup.OperationRecordService
+
+var respPool sync.Pool
+var bufferSize = 1024
+
+func init() {
+	respPool.New = func() interface{} {
+		return make([]byte, bufferSize)
+	}
+}
 
 func OperationRecord() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -27,11 +37,11 @@ func OperationRecord() gin.HandlerFunc {
 		var userId int
 		if c.Request.Method != http.MethodGet {
 			var err error
-			body, err = ioutil.ReadAll(c.Request.Body)
+			body, err = io.ReadAll(c.Request.Body)
 			if err != nil {
 				global.GVA_LOG.Error("read body from request error:", zap.Error(err))
 			} else {
-				c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(body))
+				c.Request.Body = io.NopCloser(bytes.NewBuffer(body))
 			}
 		} else {
 			query := c.Request.URL.RawQuery
@@ -47,8 +57,8 @@ func OperationRecord() gin.HandlerFunc {
 			body, _ = json.Marshal(&m)
 		}
 		claims, _ := utils.GetClaims(c)
-		if claims.ID != 0 {
-			userId = int(claims.ID)
+		if claims != nil && claims.BaseClaims.ID != 0 {
+			userId = int(claims.BaseClaims.ID)
 		} else {
 			id, err := strconv.Atoi(c.Request.Header.Get("x-user-id"))
 			if err != nil {
@@ -61,14 +71,21 @@ func OperationRecord() gin.HandlerFunc {
 			Method: c.Request.Method,
 			Path:   c.Request.URL.Path,
 			Agent:  c.Request.UserAgent(),
-			Body:   string(body),
+			Body:   "",
 			UserID: userId,
 		}
-		// 存在某些未知错误 TODO
-		//values := c.Request.Header.Values("content-type")
-		//if len(values) >0 && strings.Contains(values[0], "boundary") {
-		//	record.Body = "file"
-		//}
+
+		// 上传文件时候 中间件日志进行裁断操作
+		if strings.Contains(c.GetHeader("Content-Type"), "multipart/form-data") {
+			record.Body = "[文件]"
+		} else {
+			if len(body) > bufferSize {
+				record.Body = "[超出记录长度]"
+			} else {
+				record.Body = string(body)
+			}
+		}
+
 		writer := responseBodyWriter{
 			ResponseWriter: c.Writer,
 			body:           &bytes.Buffer{},
@@ -83,6 +100,21 @@ func OperationRecord() gin.HandlerFunc {
 		record.Status = c.Writer.Status()
 		record.Latency = latency
 		record.Resp = writer.body.String()
+
+		if strings.Contains(c.Writer.Header().Get("Pragma"), "public") ||
+			strings.Contains(c.Writer.Header().Get("Expires"), "0") ||
+			strings.Contains(c.Writer.Header().Get("Cache-Control"), "must-revalidate, post-check=0, pre-check=0") ||
+			strings.Contains(c.Writer.Header().Get("Content-Type"), "application/force-download") ||
+			strings.Contains(c.Writer.Header().Get("Content-Type"), "application/octet-stream") ||
+			strings.Contains(c.Writer.Header().Get("Content-Type"), "application/vnd.ms-excel") ||
+			strings.Contains(c.Writer.Header().Get("Content-Type"), "application/download") ||
+			strings.Contains(c.Writer.Header().Get("Content-Disposition"), "attachment") ||
+			strings.Contains(c.Writer.Header().Get("Content-Transfer-Encoding"), "binary") {
+			if len(record.Resp) > bufferSize {
+				// 截断
+				record.Body = "超出记录长度"
+			}
+		}
 
 		if err := operationRecordService.CreateSysOperationRecord(record); err != nil {
 			global.GVA_LOG.Error("create operation record error:", zap.Error(err))

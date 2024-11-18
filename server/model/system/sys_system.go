@@ -1,7 +1,7 @@
 package system
 
 import (
-	"smart-admin/server/config"
+	"github.com/flipped-aurora/gin-vue-admin/server/config"
 )
 
 // 配置文件结构体

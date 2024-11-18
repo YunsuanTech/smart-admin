@@ -1,8 +1,7 @@
-package twitter
+package Twitter
 
 type ServiceGroup struct {
-	TSystemService
-	TMonitoringService
-	TTwitterUserService
-	TTwitterContentService
+	TwitterUsersService
+	ScoringRulesService
+	ScoreRecordService
 }

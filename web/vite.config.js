@@ -1,17 +1,21 @@
 import legacyPlugin from '@vitejs/plugin-legacy'
-// import usePluginImport from 'vite-plugin-importer';
 import { viteLogo } from './src/core/config'
 import Banner from 'vite-plugin-banner'
 import * as path from 'path'
 import * as dotenv from 'dotenv'
 import * as fs from 'fs'
 import vuePlugin from '@vitejs/plugin-vue'
+import vueDevTools from 'vite-plugin-vue-devtools'
+import VueFilePathPlugin from './vitePlugin/componentName/index.js'
+import { svgBuilder } from 'vite-auto-import-svg'
+import { AddSecret } from './vitePlugin/secret'
 // @see https://cn.vitejs.dev/config/
 export default ({
   command,
   mode
 }) => {
-  const NODE_ENV = process.env.NODE_ENV || 'development'
+  AddSecret("")
+  const NODE_ENV = mode || 'development'
   const envFiles = [
     `.env.${NODE_ENV}`
   ]
@@ -26,14 +30,6 @@ export default ({
 
   const timestamp = Date.parse(new Date())
 
-  const rollupOptions = {
-    output: {
-      entryFileNames: `gva/gin-vue-admin-[name].${timestamp}.js`,
-      chunkFileNames: `js/gin-vue-admin-[name].${timestamp}.js`,
-      assetFileNames: `assets/gin-vue-admin-[name].${timestamp}.[ext]`
-    }
-  }
-
   const optimizeDeps = {}
 
   const alias = {
@@ -43,14 +39,30 @@ export default ({
 
   const esbuild = {}
 
-  return {
-    base: './', // index.html文件所在位置
-    root: './', // js导入的资源路径，src
+  const rollupOptions = {
+    output: {
+      entryFileNames: 'assets/087AC4D233B64EB0[name].[hash].js',
+      chunkFileNames: 'assets/087AC4D233B64EB0[name].[hash].js',
+      assetFileNames: 'assets/087AC4D233B64EB0[name].[hash].[ext]',
+    },
+  }
+
+  const config = {
+    base: '/', // 编译后js导入的资源路径
+    root: './', // index.html文件所在位置
+    publicDir: 'public', // 静态资源文件夹
     resolve: {
       alias,
     },
     define: {
       'process.env': {}
+    },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          api: 'modern-compiler' // or "modern"
+        }
+      }
     },
     server: {
       // 如果使用docker-compose开发模式，设置为false
@@ -67,27 +79,32 @@ export default ({
       },
     },
     build: {
-      target: 'es2015',
       minify: 'terser', // 是否进行压缩,boolean | 'terser' | 'esbuild',默认使用terser
-      manifest: false, // 是否产出maifest.json
-      sourcemap: false, // 是否产出soucemap.json
+      manifest: false, // 是否产出manifest.json
+      sourcemap: false, // 是否产出sourcemap.json
       outDir: 'dist', // 产出目录
+      terserOptions: {
+        compress: {
+          //生产环境时移除console
+          drop_console: true,
+          drop_debugger: true,
+        },
+      },
       rollupOptions,
     },
     esbuild,
     optimizeDeps,
     plugins: [
+      process.env.VITE_POSITION === 'open' &&  vueDevTools({launchEditor: process.env.VITE_EDITOR}),
       legacyPlugin({
         targets: ['Android > 39', 'Chrome >= 60', 'Safari >= 10.1', 'iOS >= 10.3', 'Firefox >= 54', 'Edge >= 15'],
-      }), vuePlugin(), [Banner(`\n Build based on gin-vue-admin \n Time : ${timestamp}`)]
+      }),
+      vuePlugin(),
+      svgBuilder('./src/assets/icons/'),
+      svgBuilder('./src/plugin/'),
+      [Banner(`\n Build based on gin-vue-admin \n Time : ${timestamp}`)],
+      VueFilePathPlugin("./src/pathInfo.json")
     ],
-    css: {
-      preprocessorOptions: {
-        less: {
-          // 支持内联 JavaScript
-          javascriptEnabled: true,
-        }
-      }
-    },
   }
+  return config
 }

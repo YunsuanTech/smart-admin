@@ -1,6 +1,6 @@
 package initialize
 
-import "smart-admin/server/utils"
+import "github.com/flipped-aurora/gin-vue-admin/server/utils"
 
 func init() {
 	_ = utils.RegisterRule("PageVerify",

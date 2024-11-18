@@ -1,11 +1,12 @@
 package initialize
 
 import (
+	"github.com/flipped-aurora/gin-vue-admin/server/config"
+	"github.com/flipped-aurora/gin-vue-admin/server/global"
+	"github.com/flipped-aurora/gin-vue-admin/server/initialize/internal"
+	_ "github.com/go-sql-driver/mysql"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"smart-admin/server/config"
-	"smart-admin/server/global"
-	"smart-admin/server/initialize/internal"
 )
 
 // GormMysql 初始化Mysql数据库
@@ -21,9 +22,10 @@ func GormMysql() *gorm.DB {
 		DefaultStringSize:         191,     // string 类型字段的默认长度
 		SkipInitializeWithVersion: false,   // 根据版本自动配置
 	}
-	if db, err := gorm.Open(mysql.New(mysqlConfig), internal.Gorm.Config()); err != nil {
+	if db, err := gorm.Open(mysql.New(mysqlConfig), internal.Gorm.Config(m.Prefix, m.Singular)); err != nil {
 		return nil
 	} else {
+		db.InstanceSet("gorm:table_options", "ENGINE="+m.Engine)
 		sqlDB, _ := db.DB()
 		sqlDB.SetMaxIdleConns(m.MaxIdleConns)
 		sqlDB.SetMaxOpenConns(m.MaxOpenConns)
@@ -32,7 +34,7 @@ func GormMysql() *gorm.DB {
 }
 
 // GormMysqlByConfig 初始化Mysql数据库用过传入配置
-func GormMysqlByConfig(m config.DB) *gorm.DB {
+func GormMysqlByConfig(m config.Mysql) *gorm.DB {
 	if m.Dbname == "" {
 		return nil
 	}
@@ -41,9 +43,10 @@ func GormMysqlByConfig(m config.DB) *gorm.DB {
 		DefaultStringSize:         191,     // string 类型字段的默认长度
 		SkipInitializeWithVersion: false,   // 根据版本自动配置
 	}
-	if db, err := gorm.Open(mysql.New(mysqlConfig), internal.Gorm.Config()); err != nil {
+	if db, err := gorm.Open(mysql.New(mysqlConfig), internal.Gorm.Config(m.Prefix, m.Singular)); err != nil {
 		panic(err)
 	} else {
+		db.InstanceSet("gorm:table_options", "ENGINE=InnoDB")
 		sqlDB, _ := db.DB()
 		sqlDB.SetMaxIdleConns(m.MaxIdleConns)
 		sqlDB.SetMaxOpenConns(m.MaxOpenConns)

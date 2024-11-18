@@ -1,12 +1,11 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "This is a sample Server pets",
-        "title": "Swagger Example API",
+        "description": "使用gin+vue进行极速开发的全栈开发基础平台",
+        "title": "Gin-Vue-Admin Swagger API接口文档",
         "contact": {},
-        "version": "0.0.1"
+        "version": "v2.7.7"
     },
-    "basePath": "/",
     "paths": {
         "/api/createApi": {
             "post": {
@@ -158,6 +157,79 @@
                 }
             }
         },
+        "/api/enterSyncApi": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SysApi"
+                ],
+                "summary": "确认同步API",
+                "responses": {
+                    "200": {
+                        "description": "确认同步API",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/freshCasbin": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SysApi"
+                ],
+                "summary": "刷新casbin缓存",
+                "responses": {
+                    "200": {
+                        "description": "刷新成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/getAllApis": {
             "post": {
                 "security": [
@@ -250,6 +322,45 @@
                 }
             }
         },
+        "/api/getApiGroups": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SysApi"
+                ],
+                "summary": "获取API分组",
+                "responses": {
+                    "200": {
+                        "description": "获取API分组",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/getApiList": {
             "post": {
                 "security": [
@@ -292,6 +403,84 @@
                                         "data": {
                                             "$ref": "#/definitions/response.PageResult"
                                         },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/ignoreApi": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "IgnoreApi"
+                ],
+                "summary": "忽略API",
+                "responses": {
+                    "200": {
+                        "description": "同步API",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/syncApi": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SysApi"
+                ],
+                "summary": "同步API",
+                "responses": {
+                    "200": {
+                        "description": "同步API",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
                                         "msg": {
                                             "type": "string"
                                         }
@@ -720,6 +909,59 @@
                 "tags": [
                     "AuthorityBtn"
                 ],
+                "summary": "获取权限按钮",
+                "parameters": [
+                    {
+                        "description": "菜单id, 角色id, 选中的按钮id",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.SysAuthorityBtnReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回列表成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.SysAuthorityBtnRes"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/authorityBtn/setAuthorityBtn": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AuthorityBtn"
+                ],
                 "summary": "设置权限按钮",
                 "parameters": [
                     {
@@ -754,7 +996,137 @@
                 }
             }
         },
+        "/autoCode/addFunc": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AddFunc"
+                ],
+                "summary": "增加方法",
+                "parameters": [
+                    {
+                        "description": "增加方法",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.AutoCode"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true,\"data\":{},\"msg\":\"创建成功\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/autoCode/createPackage": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AutoCodePackage"
+                ],
+                "summary": "创建package",
+                "parameters": [
+                    {
+                        "description": "创建package",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.SysAutoCodePackageCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "创建package成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "additionalProperties": true
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/autoCode/createTemp": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AutoCodeTemplate"
+                ],
+                "summary": "自动代码模板",
+                "parameters": [
+                    {
+                        "description": "创建自动代码",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.AutoCode"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true,\"data\":{},\"msg\":\"创建成功\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/autoCode/delPackage": {
             "post": {
                 "security": [
                     {
@@ -770,23 +1142,39 @@
                 "tags": [
                     "AutoCode"
                 ],
-                "summary": "自动代码模板",
+                "summary": "删除package",
                 "parameters": [
                     {
-                        "description": "创建自动代码",
+                        "description": "创建package",
                         "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/system.AutoCodeStruct"
+                            "$ref": "#/definitions/request.GetById"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"success\":true,\"data\":{},\"msg\":\"创建成功\"}",
+                        "description": "删除package成功",
                         "schema": {
-                            "type": "string"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "additionalProperties": true
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -982,6 +1370,49 @@
                 }
             }
         },
+        "/autoCode/getPackage": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AutoCodePackage"
+                ],
+                "summary": "获取package",
+                "responses": {
+                    "200": {
+                        "description": "创建package成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "additionalProperties": true
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/autoCode/getSysHistory": {
             "post": {
                 "security": [
@@ -1006,7 +1437,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/request.SysAutoHistory"
+                            "$ref": "#/definitions/request.PageInfo"
                         }
                     }
                 ],
@@ -1078,6 +1509,103 @@
                 }
             }
         },
+        "/autoCode/getTemplates": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AutoCodePackage"
+                ],
+                "summary": "获取package",
+                "responses": {
+                    "200": {
+                        "description": "创建package成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "additionalProperties": true
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/autoCode/installPlugin": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AutoCodePlugin"
+                ],
+                "summary": "安装插件",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "this is a test file",
+                        "name": "plug",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "安装插件成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/autoCode/preview": {
             "post": {
                 "security": [
@@ -1092,7 +1620,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "AutoCode"
+                    "AutoCodeTemplate"
                 ],
                 "summary": "预览创建后的代码",
                 "parameters": [
@@ -1102,13 +1630,65 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/system.AutoCodeStruct"
+                            "$ref": "#/definitions/request.AutoCode"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "预览创建后的代码",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "additionalProperties": true
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/autoCode/pubPlug": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AutoCodePlugin"
+                ],
+                "summary": "打包插件",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "插件名称",
+                        "name": "plugName",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "打包插件成功",
                         "schema": {
                             "allOf": [
                                 {
@@ -1156,312 +1736,13 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/request.GetById"
+                            "$ref": "#/definitions/request.SysAutoHistoryRollBack"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "回滚自动生成代码",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/autoCodeExample/createAutoCodeExample": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "AutoCodeExample"
-                ],
-                "summary": "创建AutoCodeExample",
-                "parameters": [
-                    {
-                        "description": "AutoCodeExample模型",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/autocode.AutoCodeExample"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "创建AutoCodeExample",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/autoCodeExample/deleteAutoCodeExample": {
-            "delete": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "AutoCodeExample"
-                ],
-                "summary": "删除AutoCodeExample",
-                "parameters": [
-                    {
-                        "description": "AutoCodeExample模型",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/autocode.AutoCodeExample"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "删除AutoCodeExample",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/autoCodeExample/findAutoCodeExample": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "AutoCodeExample"
-                ],
-                "summary": "用id查询AutoCodeExample",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "展示值",
-                        "name": "autoCodeExampleField",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "创建时间",
-                        "name": "createdAt",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "主键ID",
-                        "name": "id",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "更新时间",
-                        "name": "updatedAt",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "用id查询AutoCodeExample",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object",
-                                            "additionalProperties": true
-                                        },
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/autoCodeExample/getAutoCodeExampleList": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "AutoCodeExample"
-                ],
-                "summary": "分页获取AutoCodeExample列表",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "展示值",
-                        "name": "autoCodeExampleField",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "创建时间",
-                        "name": "createdAt",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "主键ID",
-                        "name": "id",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "页码",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "每页大小",
-                        "name": "pageSize",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "更新时间",
-                        "name": "updatedAt",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "分页获取AutoCodeExample列表,返回包括列表,总数,页码,每页数量",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/response.PageResult"
-                                        },
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/autoCodeExample/updateAutoCodeExample": {
-            "put": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "AutoCodeExample"
-                ],
-                "summary": "更新AutoCodeExample",
-                "parameters": [
-                    {
-                        "description": "更新AutoCodeExample",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/autocode.AutoCodeExample"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "更新AutoCodeExample",
                         "schema": {
                             "allOf": [
                                 {
@@ -1500,7 +1781,7 @@
                 "summary": "生成验证码",
                 "responses": {
                     "200": {
-                        "description": "生成验证码,返回包括随机数id,base64,验证码长度",
+                        "description": "生成验证码,返回包括随机数id,base64,验证码长度,是否开启验证码",
                         "schema": {
                             "allOf": [
                                 {
@@ -1690,6 +1971,12 @@
                 "summary": "获取单一客户信息",
                 "parameters": [
                     {
+                        "type": "integer",
+                        "description": "主键ID",
+                        "name": "ID",
+                        "in": "query"
+                    },
+                    {
                         "type": "string",
                         "description": "创建时间",
                         "name": "createdAt",
@@ -1709,12 +1996,6 @@
                     },
                     {
                         "type": "integer",
-                        "description": "主键ID",
-                        "name": "id",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
                         "description": "管理角色ID",
                         "name": "sysUserAuthorityID",
                         "in": "query"
@@ -1920,6 +2201,12 @@
                 "summary": "分页获取权限客户列表",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "关键字",
+                        "name": "keyword",
+                        "in": "query"
+                    },
+                    {
                         "type": "integer",
                         "description": "页码",
                         "name": "page",
@@ -2011,161 +2298,6 @@
                         "description": "{\"success\":true,\"data\":{},\"msg\":\"发送成功\"}",
                         "schema": {
                             "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/excel/downloadTemplate": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "excel"
-                ],
-                "summary": "下载模板",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "模板名称",
-                        "name": "fileName",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/excel/exportExcel": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/octet-stream"
-                ],
-                "tags": [
-                    "excel"
-                ],
-                "summary": "导出Excel",
-                "parameters": [
-                    {
-                        "description": "导出Excel文件信息",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/example.ExcelInfo"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/excel/importExcel": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "excel"
-                ],
-                "summary": "导入Excel文件",
-                "parameters": [
-                    {
-                        "type": "file",
-                        "description": "导入Excel文件",
-                        "name": "file",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "导入Excel文件",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/excel/loadExcel": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "excel"
-                ],
-                "summary": "加载Excel数据",
-                "responses": {
-                    "200": {
-                        "description": "加载Excel数据,返回包括列表,总数,页码,每页数量",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/response.PageResult"
-                                        },
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
                         }
                     }
                 }
@@ -2458,6 +2590,451 @@
                                         "data": {
                                             "$ref": "#/definitions/response.ExaFileResponse"
                                         },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/info/createInfo": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Info"
+                ],
+                "summary": "创建公告",
+                "parameters": [
+                    {
+                        "description": "创建公告",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Info"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "创建成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/info/deleteInfo": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Info"
+                ],
+                "summary": "删除公告",
+                "parameters": [
+                    {
+                        "description": "删除公告",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Info"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "删除成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/info/deleteInfoByIds": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Info"
+                ],
+                "summary": "批量删除公告",
+                "responses": {
+                    "200": {
+                        "description": "批量删除成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/info/findInfo": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Info"
+                ],
+                "summary": "用id查询公告",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "主键ID",
+                        "name": "ID",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "内容",
+                        "name": "content",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "创建时间",
+                        "name": "createdAt",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "标题",
+                        "name": "title",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "更新时间",
+                        "name": "updatedAt",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "作者",
+                        "name": "userID",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/model.Info"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/info/getInfoDataSource": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Info"
+                ],
+                "summary": "获取Info的数据源",
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/info/getInfoList": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Info"
+                ],
+                "summary": "分页获取公告列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "endCreatedAt",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "关键字",
+                        "name": "keyword",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "页码",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "每页大小",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "startCreatedAt",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "获取成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.PageResult"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/info/getInfoPublic": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Info"
+                ],
+                "summary": "不需要鉴权的公告接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "endCreatedAt",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "关键字",
+                        "name": "keyword",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "页码",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "每页大小",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "startCreatedAt",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "获取成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/info/updateInfo": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Info"
+                ],
+                "summary": "更新公告",
+                "parameters": [
+                    {
+                        "description": "更新公告",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Info"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "更新成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
                                         "msg": {
                                             "type": "string"
                                         }
@@ -3164,6 +3741,12 @@
                 "summary": "用id查询SysDictionary",
                 "parameters": [
                     {
+                        "type": "integer",
+                        "description": "主键ID",
+                        "name": "ID",
+                        "in": "query"
+                    },
+                    {
                         "type": "string",
                         "description": "创建时间",
                         "name": "createdAt",
@@ -3173,12 +3756,6 @@
                         "type": "string",
                         "description": "描述",
                         "name": "desc",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "主键ID",
-                        "name": "id",
                         "in": "query"
                     },
                     {
@@ -3249,62 +3826,6 @@
                     "SysDictionary"
                 ],
                 "summary": "分页获取SysDictionary列表",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "创建时间",
-                        "name": "createdAt",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "描述",
-                        "name": "desc",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "主键ID",
-                        "name": "id",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "字典名（中）",
-                        "name": "name",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "页码",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "每页大小",
-                        "name": "pageSize",
-                        "in": "query"
-                    },
-                    {
-                        "type": "boolean",
-                        "description": "状态",
-                        "name": "status",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "字典名（英）",
-                        "name": "type",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "更新时间",
-                        "name": "updatedAt",
-                        "in": "query"
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "分页获取SysDictionary列表,返回包括列表,总数,页码,每页数量",
@@ -3499,15 +4020,21 @@
                 "summary": "用id查询SysDictionaryDetail",
                 "parameters": [
                     {
+                        "type": "integer",
+                        "description": "主键ID",
+                        "name": "ID",
+                        "in": "query"
+                    },
+                    {
                         "type": "string",
                         "description": "创建时间",
                         "name": "createdAt",
                         "in": "query"
                     },
                     {
-                        "type": "integer",
-                        "description": "主键ID",
-                        "name": "id",
+                        "type": "string",
+                        "description": "扩展值",
+                        "name": "extend",
                         "in": "query"
                     },
                     {
@@ -3541,7 +4068,7 @@
                         "in": "query"
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "字典值",
                         "name": "value",
                         "in": "query"
@@ -3592,15 +4119,27 @@
                 "summary": "分页获取SysDictionaryDetail列表",
                 "parameters": [
                     {
+                        "type": "integer",
+                        "description": "主键ID",
+                        "name": "ID",
+                        "in": "query"
+                    },
+                    {
                         "type": "string",
                         "description": "创建时间",
                         "name": "createdAt",
                         "in": "query"
                     },
                     {
-                        "type": "integer",
-                        "description": "主键ID",
-                        "name": "id",
+                        "type": "string",
+                        "description": "扩展值",
+                        "name": "extend",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "关键字",
+                        "name": "keyword",
                         "in": "query"
                     },
                     {
@@ -3646,7 +4185,7 @@
                         "in": "query"
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "字典值",
                         "name": "value",
                         "in": "query"
@@ -3722,6 +4261,400 @@
                                     }
                                 }
                             ]
+                        }
+                    }
+                }
+            }
+        },
+        "/sysExportTemplate/createSysExportTemplate": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SysExportTemplate"
+                ],
+                "summary": "创建导出模板",
+                "parameters": [
+                    {
+                        "description": "创建导出模板",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/system.SysExportTemplate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true,\"data\":{},\"msg\":\"创建成功\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysExportTemplate/deleteSysExportTemplate": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SysExportTemplate"
+                ],
+                "summary": "删除导出模板",
+                "parameters": [
+                    {
+                        "description": "删除导出模板",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/system.SysExportTemplate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true,\"data\":{},\"msg\":\"删除成功\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysExportTemplate/deleteSysExportTemplateByIds": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SysExportTemplate"
+                ],
+                "summary": "批量删除导出模板",
+                "parameters": [
+                    {
+                        "description": "批量删除导出模板",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.IdsReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true,\"data\":{},\"msg\":\"批量删除成功\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysExportTemplate/exportExcel": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SysExportTemplate"
+                ],
+                "summary": "导出表格模板",
+                "responses": {}
+            }
+        },
+        "/sysExportTemplate/findSysExportTemplate": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SysExportTemplate"
+                ],
+                "summary": "用id查询导出模板",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "主键ID",
+                        "name": "ID",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "创建时间",
+                        "name": "createdAt",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "数据库名称",
+                        "name": "dbName",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "模板名称",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "order",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "表名称",
+                        "name": "tableName",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "模板标识",
+                        "name": "templateID",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "模板信息",
+                        "name": "templateInfo",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "更新时间",
+                        "name": "updatedAt",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true,\"data\":{},\"msg\":\"查询成功\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysExportTemplate/getSysExportTemplateList": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SysExportTemplate"
+                ],
+                "summary": "分页获取导出模板列表",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "主键ID",
+                        "name": "ID",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "创建时间",
+                        "name": "createdAt",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "数据库名称",
+                        "name": "dbName",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "endCreatedAt",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "关键字",
+                        "name": "keyword",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "模板名称",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "order",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "页码",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "每页大小",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "startCreatedAt",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "表名称",
+                        "name": "tableName",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "模板标识",
+                        "name": "templateID",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "模板信息",
+                        "name": "templateInfo",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "更新时间",
+                        "name": "updatedAt",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true,\"data\":{},\"msg\":\"获取成功\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysExportTemplate/importExcel": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SysImportTemplate"
+                ],
+                "summary": "导入表格",
+                "responses": {}
+            }
+        },
+        "/sysExportTemplate/updateSysExportTemplate": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SysExportTemplate"
+                ],
+                "summary": "更新导出模板",
+                "parameters": [
+                    {
+                        "description": "更新导出模板",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/system.SysExportTemplate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true,\"data\":{},\"msg\":\"更新成功\"}",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
@@ -3896,6 +4829,12 @@
                 "summary": "用id查询SysOperationRecord",
                 "parameters": [
                     {
+                        "type": "integer",
+                        "description": "主键ID",
+                        "name": "ID",
+                        "in": "query"
+                    },
+                    {
                         "type": "string",
                         "description": "代理",
                         "name": "agent",
@@ -3917,12 +4856,6 @@
                         "type": "string",
                         "description": "错误信息",
                         "name": "error_message",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "主键ID",
-                        "name": "id",
                         "in": "query"
                     },
                     {
@@ -4019,6 +4952,12 @@
                 "summary": "分页获取SysOperationRecord列表",
                 "parameters": [
                     {
+                        "type": "integer",
+                        "description": "主键ID",
+                        "name": "ID",
+                        "in": "query"
+                    },
+                    {
                         "type": "string",
                         "description": "代理",
                         "name": "agent",
@@ -4043,15 +4982,15 @@
                         "in": "query"
                     },
                     {
-                        "type": "integer",
-                        "description": "主键ID",
-                        "name": "id",
+                        "type": "string",
+                        "description": "请求ip",
+                        "name": "ip",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "请求ip",
-                        "name": "ip",
+                        "description": "关键字",
+                        "name": "keyword",
                         "in": "query"
                     },
                     {
@@ -4350,6 +5289,51 @@
                 }
             }
         },
+        "/user/admin_register": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SysUser"
+                ],
+                "summary": "用户注册账号",
+                "parameters": [
+                    {
+                        "description": "用户名, 昵称, 密码, 角色ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.Register"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "用户注册账号,返回包括用户信息",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.SysUserResponse"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/user/changePassword": {
             "post": {
                 "security": [
@@ -4371,7 +5355,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/request.ChangePasswordStruct"
+                            "$ref": "#/definitions/request.ChangePasswordReq"
                         }
                     }
                 ],
@@ -4531,51 +5515,6 @@
                                     "properties": {
                                         "data": {
                                             "$ref": "#/definitions/response.PageResult"
-                                        },
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/user/register": {
-            "post": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "SysUser"
-                ],
-                "summary": "用户注册账号",
-                "parameters": [
-                    {
-                        "description": "用户名, 昵称, 密码, 角色ID",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.Register"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "用户注册账号,返回包括用户信息",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/response.SysUserResponse"
                                         },
                                         "msg": {
                                             "type": "string"
@@ -4791,43 +5730,22 @@
         }
     },
     "definitions": {
-        "autocode.AutoCodeExample": {
-            "type": "object",
-            "properties": {
-                "autoCodeExampleField": {
-                    "description": "展示值",
-                    "type": "string"
-                },
-                "createdAt": {
-                    "description": "创建时间",
-                    "type": "string"
-                },
-                "id": {
-                    "description": "主键ID",
-                    "type": "integer"
-                },
-                "updatedAt": {
-                    "description": "更新时间",
-                    "type": "string"
-                }
-            }
-        },
         "config.AliyunOSS": {
             "type": "object",
             "properties": {
-                "accessKeyId": {
+                "access-key-id": {
                     "type": "string"
                 },
-                "accessKeySecret": {
+                "access-key-secret": {
                     "type": "string"
                 },
-                "basePath": {
+                "base-path": {
                     "type": "string"
                 },
-                "bucketName": {
+                "bucket-name": {
                     "type": "string"
                 },
-                "bucketUrl": {
+                "bucket-url": {
                     "type": "string"
                 },
                 "endpoint": {
@@ -4838,43 +5756,19 @@
         "config.Autocode": {
             "type": "object",
             "properties": {
+                "ai-path": {
+                    "type": "string"
+                },
+                "module": {
+                    "type": "string"
+                },
                 "root": {
                     "type": "string"
                 },
                 "server": {
                     "type": "string"
                 },
-                "serverApi": {
-                    "type": "string"
-                },
-                "serverInitialize": {
-                    "type": "string"
-                },
-                "serverModel": {
-                    "type": "string"
-                },
-                "serverRequest": {
-                    "type": "string"
-                },
-                "serverRouter": {
-                    "type": "string"
-                },
-                "serverService": {
-                    "type": "string"
-                },
-                "transferRestart": {
-                    "type": "boolean"
-                },
                 "web": {
-                    "type": "string"
-                },
-                "webApi": {
-                    "type": "string"
-                },
-                "webForm": {
-                    "type": "string"
-                },
-                "webTable": {
                     "type": "string"
                 }
             }
@@ -4882,22 +5776,31 @@
         "config.AwsS3": {
             "type": "object",
             "properties": {
-                "baseURL": {
+                "base-url": {
                     "type": "string"
                 },
                 "bucket": {
                     "type": "string"
                 },
-                "pathPrefix": {
+                "disable-ssl": {
+                    "type": "boolean"
+                },
+                "endpoint": {
+                    "type": "string"
+                },
+                "path-prefix": {
                     "type": "string"
                 },
                 "region": {
                     "type": "string"
                 },
-                "secretID": {
+                "s3-force-path-style": {
+                    "type": "boolean"
+                },
+                "secret-id": {
                     "type": "string"
                 },
-                "secretKey": {
+                "secret-key": {
                     "type": "string"
                 }
             }
@@ -4939,128 +5842,55 @@
         "config.Captcha": {
             "type": "object",
             "properties": {
-                "imgHeight": {
+                "img-height": {
                     "description": "验证码高度",
                     "type": "integer"
                 },
-                "imgWidth": {
+                "img-width": {
                     "description": "验证码宽度",
                     "type": "integer"
                 },
-                "keyLong": {
+                "key-long": {
                     "description": "验证码长度",
                     "type": "integer"
+                },
+                "open-captcha": {
+                    "description": "防爆破验证码开启此数，0代表每次登录都需要验证码，其他数字代表错误密码此数，如3代表错误三次后出现验证码",
+                    "type": "integer"
+                },
+                "open-captcha-timeout": {
+                    "description": "防爆破验证码超时时间，单位：s(秒)",
+                    "type": "integer"
                 }
             }
         },
-        "config.Casbin": {
+        "config.CloudflareR2": {
             "type": "object",
             "properties": {
-                "modelPath": {
-                    "description": "存放casbin模型的相对路径",
-                    "type": "string"
-                }
-            }
-        },
-        "config.DB": {
-            "type": "object",
-            "properties": {
-                "alias-name": {
+                "access-key-id": {
                     "type": "string"
                 },
-                "config": {
-                    "description": "高级配置",
+                "account-id": {
                     "type": "string"
                 },
-                "dbname": {
-                    "description": "数据库名",
+                "base-url": {
                     "type": "string"
                 },
-                "disable": {
-                    "type": "boolean"
-                },
-                "logMode": {
-                    "description": "是否开启Gorm全局日志",
-                    "type": "string"
-                },
-                "logZap": {
-                    "type": "boolean"
-                },
-                "maxIdleConns": {
-                    "description": "空闲中的最大连接数",
-                    "type": "integer"
-                },
-                "maxOpenConns": {
-                    "description": "打开到数据库的最大连接数",
-                    "type": "integer"
-                },
-                "password": {
-                    "description": "数据库密码",
+                "bucket": {
                     "type": "string"
                 },
                 "path": {
-                    "description": "服务器地址:端口",
                     "type": "string"
                 },
-                "port": {
-                    "description": ":端口",
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                },
-                "username": {
-                    "description": "数据库用户名",
+                "secret-access-key": {
                     "type": "string"
                 }
             }
         },
-        "config.Detail": {
+        "config.DiskList": {
             "type": "object",
             "properties": {
-                "compareField": {
-                    "description": "需要比较时间的字段",
-                    "type": "string"
-                },
-                "interval": {
-                    "description": "时间间隔",
-                    "type": "string"
-                },
-                "tableName": {
-                    "description": "需要清理的表名",
-                    "type": "string"
-                }
-            }
-        },
-        "config.Email": {
-            "type": "object",
-            "properties": {
-                "from": {
-                    "description": "收件人",
-                    "type": "string"
-                },
-                "host": {
-                    "description": "服务器地址",
-                    "type": "string"
-                },
-                "isSSL": {
-                    "description": "是否SSL",
-                    "type": "boolean"
-                },
-                "nickname": {
-                    "description": "昵称",
-                    "type": "string"
-                },
-                "port": {
-                    "description": "端口",
-                    "type": "integer"
-                },
-                "secret": {
-                    "description": "密钥",
-                    "type": "string"
-                },
-                "to": {
-                    "description": "收件人:多个以英文逗号分隔",
+                "mount-point": {
                     "type": "string"
                 }
             }
@@ -5076,7 +5906,7 @@
         "config.HuaWeiObs": {
             "type": "object",
             "properties": {
-                "accessKey": {
+                "access-key": {
                     "type": "string"
                 },
                 "bucket": {
@@ -5088,7 +5918,7 @@
                 "path": {
                     "type": "string"
                 },
-                "secretKey": {
+                "secret-key": {
                     "type": "string"
                 }
             }
@@ -5096,19 +5926,19 @@
         "config.JWT": {
             "type": "object",
             "properties": {
-                "bufferTime": {
+                "buffer-time": {
                     "description": "缓冲时间",
-                    "type": "integer"
+                    "type": "string"
                 },
-                "expiresTime": {
+                "expires-time": {
                     "description": "过期时间",
-                    "type": "integer"
+                    "type": "string"
                 },
                 "issuer": {
                     "description": "签发者",
                     "type": "string"
                 },
-                "signingKey": {
+                "signing-key": {
                     "description": "jwt签名",
                     "type": "string"
                 }
@@ -5118,7 +5948,138 @@
             "type": "object",
             "properties": {
                 "path": {
-                    "description": "本地文件路径",
+                    "description": "本地文件访问路径",
+                    "type": "string"
+                },
+                "store-path": {
+                    "description": "本地文件存储路径",
+                    "type": "string"
+                }
+            }
+        },
+        "config.Mongo": {
+            "type": "object",
+            "properties": {
+                "auth-source": {
+                    "description": "验证数据库",
+                    "type": "string"
+                },
+                "coll": {
+                    "description": "collection name",
+                    "type": "string"
+                },
+                "connect-timeout-ms": {
+                    "description": "连接超时时间",
+                    "type": "integer"
+                },
+                "database": {
+                    "description": "database name",
+                    "type": "string"
+                },
+                "hosts": {
+                    "description": "主机列表",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/config.MongoHost"
+                    }
+                },
+                "is-zap": {
+                    "description": "是否开启zap日志",
+                    "type": "boolean"
+                },
+                "max-pool-size": {
+                    "description": "最大连接池",
+                    "type": "integer"
+                },
+                "min-pool-size": {
+                    "description": "最小连接池",
+                    "type": "integer"
+                },
+                "options": {
+                    "description": "mongodb options",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "密码",
+                    "type": "string"
+                },
+                "socket-timeout-ms": {
+                    "description": "socket超时时间",
+                    "type": "integer"
+                },
+                "username": {
+                    "description": "用户名",
+                    "type": "string"
+                }
+            }
+        },
+        "config.MongoHost": {
+            "type": "object",
+            "properties": {
+                "host": {
+                    "description": "ip地址",
+                    "type": "string"
+                },
+                "port": {
+                    "description": "端口",
+                    "type": "string"
+                }
+            }
+        },
+        "config.Mssql": {
+            "type": "object",
+            "properties": {
+                "config": {
+                    "description": "高级配置",
+                    "type": "string"
+                },
+                "db-name": {
+                    "description": "数据库名",
+                    "type": "string"
+                },
+                "engine": {
+                    "description": "数据库引擎，默认InnoDB",
+                    "type": "string",
+                    "default": "InnoDB"
+                },
+                "log-mode": {
+                    "description": "是否开启Gorm全局日志",
+                    "type": "string"
+                },
+                "log-zap": {
+                    "description": "是否通过zap写入日志文件",
+                    "type": "boolean"
+                },
+                "max-idle-conns": {
+                    "description": "空闲中的最大连接数",
+                    "type": "integer"
+                },
+                "max-open-conns": {
+                    "description": "打开到数据库的最大连接数",
+                    "type": "integer"
+                },
+                "password": {
+                    "description": "数据库密码",
+                    "type": "string"
+                },
+                "path": {
+                    "description": "数据库地址",
+                    "type": "string"
+                },
+                "port": {
+                    "description": "数据库端口",
+                    "type": "string"
+                },
+                "prefix": {
+                    "description": "数据库前缀",
+                    "type": "string"
+                },
+                "singular": {
+                    "description": "是否开启全局禁用复数，true表示开启",
+                    "type": "boolean"
+                },
+                "username": {
+                    "description": "数据库账号",
                     "type": "string"
                 }
             }
@@ -5130,23 +6091,28 @@
                     "description": "高级配置",
                     "type": "string"
                 },
-                "dbname": {
+                "db-name": {
                     "description": "数据库名",
                     "type": "string"
                 },
-                "logMode": {
+                "engine": {
+                    "description": "数据库引擎，默认InnoDB",
+                    "type": "string",
+                    "default": "InnoDB"
+                },
+                "log-mode": {
                     "description": "是否开启Gorm全局日志",
                     "type": "string"
                 },
-                "logZap": {
+                "log-zap": {
                     "description": "是否通过zap写入日志文件",
                     "type": "boolean"
                 },
-                "maxIdleConns": {
+                "max-idle-conns": {
                     "description": "空闲中的最大连接数",
                     "type": "integer"
                 },
-                "maxOpenConns": {
+                "max-open-conns": {
                     "description": "打开到数据库的最大连接数",
                     "type": "integer"
                 },
@@ -5155,15 +6121,81 @@
                     "type": "string"
                 },
                 "path": {
-                    "description": "服务器地址",
+                    "description": "数据库地址",
                     "type": "string"
                 },
                 "port": {
-                    "description": "端口",
+                    "description": "数据库端口",
                     "type": "string"
                 },
+                "prefix": {
+                    "description": "数据库前缀",
+                    "type": "string"
+                },
+                "singular": {
+                    "description": "是否开启全局禁用复数，true表示开启",
+                    "type": "boolean"
+                },
                 "username": {
-                    "description": "数据库用户名",
+                    "description": "数据库账号",
+                    "type": "string"
+                }
+            }
+        },
+        "config.Oracle": {
+            "type": "object",
+            "properties": {
+                "config": {
+                    "description": "高级配置",
+                    "type": "string"
+                },
+                "db-name": {
+                    "description": "数据库名",
+                    "type": "string"
+                },
+                "engine": {
+                    "description": "数据库引擎，默认InnoDB",
+                    "type": "string",
+                    "default": "InnoDB"
+                },
+                "log-mode": {
+                    "description": "是否开启Gorm全局日志",
+                    "type": "string"
+                },
+                "log-zap": {
+                    "description": "是否通过zap写入日志文件",
+                    "type": "boolean"
+                },
+                "max-idle-conns": {
+                    "description": "空闲中的最大连接数",
+                    "type": "integer"
+                },
+                "max-open-conns": {
+                    "description": "打开到数据库的最大连接数",
+                    "type": "integer"
+                },
+                "password": {
+                    "description": "数据库密码",
+                    "type": "string"
+                },
+                "path": {
+                    "description": "数据库地址",
+                    "type": "string"
+                },
+                "port": {
+                    "description": "数据库端口",
+                    "type": "string"
+                },
+                "prefix": {
+                    "description": "数据库前缀",
+                    "type": "string"
+                },
+                "singular": {
+                    "description": "是否开启全局禁用复数，true表示开启",
+                    "type": "boolean"
+                },
+                "username": {
+                    "description": "数据库账号",
                     "type": "string"
                 }
             }
@@ -5175,23 +6207,28 @@
                     "description": "高级配置",
                     "type": "string"
                 },
-                "dbname": {
+                "db-name": {
                     "description": "数据库名",
                     "type": "string"
                 },
-                "logMode": {
+                "engine": {
+                    "description": "数据库引擎，默认InnoDB",
+                    "type": "string",
+                    "default": "InnoDB"
+                },
+                "log-mode": {
                     "description": "是否开启Gorm全局日志",
                     "type": "string"
                 },
-                "logZap": {
+                "log-zap": {
                     "description": "是否通过zap写入日志文件",
                     "type": "boolean"
                 },
-                "maxIdleConns": {
+                "max-idle-conns": {
                     "description": "空闲中的最大连接数",
                     "type": "integer"
                 },
-                "maxOpenConns": {
+                "max-open-conns": {
                     "description": "打开到数据库的最大连接数",
                     "type": "integer"
                 },
@@ -5200,15 +6237,23 @@
                     "type": "string"
                 },
                 "path": {
-                    "description": "服务器地址:端口",
+                    "description": "数据库地址",
                     "type": "string"
                 },
                 "port": {
-                    "description": ":端口",
+                    "description": "数据库端口",
                     "type": "string"
                 },
+                "prefix": {
+                    "description": "数据库前缀",
+                    "type": "string"
+                },
+                "singular": {
+                    "description": "是否开启全局禁用复数，true表示开启",
+                    "type": "boolean"
+                },
                 "username": {
-                    "description": "数据库用户名",
+                    "description": "数据库账号",
                     "type": "string"
                 }
             }
@@ -5216,7 +6261,7 @@
         "config.Qiniu": {
             "type": "object",
             "properties": {
-                "accessKey": {
+                "access-key": {
                     "description": "秘钥AK",
                     "type": "string"
                 },
@@ -5224,19 +6269,19 @@
                     "description": "空间名称",
                     "type": "string"
                 },
-                "imgPath": {
+                "img-path": {
                     "description": "CDN加速域名",
                     "type": "string"
                 },
-                "secretKey": {
+                "secret-key": {
                     "description": "秘钥SK",
                     "type": "string"
                 },
-                "useCdnDomains": {
+                "use-cdn-domains": {
                     "description": "上传是否使用CDN上传加速",
                     "type": "boolean"
                 },
-                "useHttps": {
+                "use-https": {
                     "description": "是否使用https",
                     "type": "boolean"
                 },
@@ -5253,52 +6298,77 @@
                     "description": "服务器地址:端口",
                     "type": "string"
                 },
+                "clusterAddrs": {
+                    "description": "集群模式下的节点地址列表",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "db": {
-                    "description": "redis的哪个数据库",
+                    "description": "单实例模式下redis的哪个数据库",
                     "type": "integer"
                 },
                 "password": {
                     "description": "密码",
                     "type": "string"
+                },
+                "useCluster": {
+                    "description": "是否使用集群模式",
+                    "type": "boolean"
                 }
             }
         },
         "config.Server": {
             "type": "object",
             "properties": {
-                "aliyunOSS": {
+                "aliyun-oss": {
                     "$ref": "#/definitions/config.AliyunOSS"
                 },
-                "autoCode": {
+                "autocode": {
                     "description": "auto",
-                    "$ref": "#/definitions/config.Autocode"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/config.Autocode"
+                        }
+                    ]
                 },
-                "awsS3": {
+                "aws-s3": {
                     "$ref": "#/definitions/config.AwsS3"
                 },
                 "captcha": {
                     "$ref": "#/definitions/config.Captcha"
                 },
-                "casbin": {
-                    "$ref": "#/definitions/config.Casbin"
+                "cloudflare-r2": {
+                    "$ref": "#/definitions/config.CloudflareR2"
                 },
                 "cors": {
                     "description": "跨域配置",
-                    "$ref": "#/definitions/config.CORS"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/config.CORS"
+                        }
+                    ]
                 },
                 "db-list": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/config.DB"
+                        "$ref": "#/definitions/config.SpecializedDB"
+                    }
+                },
+                "disk-list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/config.DiskList"
                     }
                 },
                 "email": {
-                    "$ref": "#/definitions/config.Email"
+                    "$ref": "#/definitions/github_com_flipped-aurora_gin-vue-admin_server_config.Email"
                 },
                 "excel": {
                     "$ref": "#/definitions/config.Excel"
                 },
-                "huaWeiObs": {
+                "hua-wei-obs": {
                     "$ref": "#/definitions/config.HuaWeiObs"
                 },
                 "jwt": {
@@ -5306,11 +6376,28 @@
                 },
                 "local": {
                     "description": "oss",
-                    "$ref": "#/definitions/config.Local"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/config.Local"
+                        }
+                    ]
+                },
+                "mongo": {
+                    "$ref": "#/definitions/config.Mongo"
+                },
+                "mssql": {
+                    "$ref": "#/definitions/config.Mssql"
                 },
                 "mysql": {
                     "description": "gorm",
-                    "$ref": "#/definitions/config.Mysql"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/config.Mysql"
+                        }
+                    ]
+                },
+                "oracle": {
+                    "$ref": "#/definitions/config.Oracle"
                 },
                 "pgsql": {
                     "$ref": "#/definitions/config.Pgsql"
@@ -5321,17 +6408,142 @@
                 "redis": {
                     "$ref": "#/definitions/config.Redis"
                 },
+                "sqlite": {
+                    "$ref": "#/definitions/config.Sqlite"
+                },
                 "system": {
                     "$ref": "#/definitions/config.System"
                 },
-                "tencentCOS": {
+                "tencent-cos": {
                     "$ref": "#/definitions/config.TencentCOS"
-                },
-                "timer": {
-                    "$ref": "#/definitions/config.Timer"
                 },
                 "zap": {
                     "$ref": "#/definitions/config.Zap"
+                }
+            }
+        },
+        "config.SpecializedDB": {
+            "type": "object",
+            "properties": {
+                "alias-name": {
+                    "type": "string"
+                },
+                "config": {
+                    "description": "高级配置",
+                    "type": "string"
+                },
+                "db-name": {
+                    "description": "数据库名",
+                    "type": "string"
+                },
+                "disable": {
+                    "type": "boolean"
+                },
+                "engine": {
+                    "description": "数据库引擎，默认InnoDB",
+                    "type": "string",
+                    "default": "InnoDB"
+                },
+                "log-mode": {
+                    "description": "是否开启Gorm全局日志",
+                    "type": "string"
+                },
+                "log-zap": {
+                    "description": "是否通过zap写入日志文件",
+                    "type": "boolean"
+                },
+                "max-idle-conns": {
+                    "description": "空闲中的最大连接数",
+                    "type": "integer"
+                },
+                "max-open-conns": {
+                    "description": "打开到数据库的最大连接数",
+                    "type": "integer"
+                },
+                "password": {
+                    "description": "数据库密码",
+                    "type": "string"
+                },
+                "path": {
+                    "description": "数据库地址",
+                    "type": "string"
+                },
+                "port": {
+                    "description": "数据库端口",
+                    "type": "string"
+                },
+                "prefix": {
+                    "description": "数据库前缀",
+                    "type": "string"
+                },
+                "singular": {
+                    "description": "是否开启全局禁用复数，true表示开启",
+                    "type": "boolean"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "username": {
+                    "description": "数据库账号",
+                    "type": "string"
+                }
+            }
+        },
+        "config.Sqlite": {
+            "type": "object",
+            "properties": {
+                "config": {
+                    "description": "高级配置",
+                    "type": "string"
+                },
+                "db-name": {
+                    "description": "数据库名",
+                    "type": "string"
+                },
+                "engine": {
+                    "description": "数据库引擎，默认InnoDB",
+                    "type": "string",
+                    "default": "InnoDB"
+                },
+                "log-mode": {
+                    "description": "是否开启Gorm全局日志",
+                    "type": "string"
+                },
+                "log-zap": {
+                    "description": "是否通过zap写入日志文件",
+                    "type": "boolean"
+                },
+                "max-idle-conns": {
+                    "description": "空闲中的最大连接数",
+                    "type": "integer"
+                },
+                "max-open-conns": {
+                    "description": "打开到数据库的最大连接数",
+                    "type": "integer"
+                },
+                "password": {
+                    "description": "数据库密码",
+                    "type": "string"
+                },
+                "path": {
+                    "description": "数据库地址",
+                    "type": "string"
+                },
+                "port": {
+                    "description": "数据库端口",
+                    "type": "string"
+                },
+                "prefix": {
+                    "description": "数据库前缀",
+                    "type": "string"
+                },
+                "singular": {
+                    "description": "是否开启全局禁用复数，true表示开启",
+                    "type": "boolean"
+                },
+                "username": {
+                    "description": "数据库账号",
+                    "type": "string"
                 }
             }
         },
@@ -5342,29 +6554,32 @@
                     "description": "端口值",
                     "type": "integer"
                 },
-                "dbType": {
+                "db-type": {
                     "description": "数据库类型:mysql(默认)|sqlite|sqlserver|postgresql",
                     "type": "string"
                 },
-                "env": {
-                    "description": "环境值",
-                    "type": "string"
-                },
-                "iplimitCount": {
+                "iplimit-count": {
                     "type": "integer"
                 },
-                "iplimitTime": {
+                "iplimit-time": {
                     "type": "integer"
                 },
-                "ossType": {
+                "oss-type": {
                     "description": "Oss类型",
                     "type": "string"
                 },
-                "useMultipoint": {
+                "router-prefix": {
+                    "type": "string"
+                },
+                "use-mongo": {
+                    "description": "使用mongo",
+                    "type": "boolean"
+                },
+                "use-multipoint": {
                     "description": "多点登录拦截",
                     "type": "boolean"
                 },
-                "useRedis": {
+                "use-redis": {
                     "description": "使用redis",
                     "type": "boolean"
                 }
@@ -5373,42 +6588,23 @@
         "config.TencentCOS": {
             "type": "object",
             "properties": {
-                "baseURL": {
+                "base-url": {
                     "type": "string"
                 },
                 "bucket": {
                     "type": "string"
                 },
-                "pathPrefix": {
+                "path-prefix": {
                     "type": "string"
                 },
                 "region": {
                     "type": "string"
                 },
-                "secretID": {
+                "secret-id": {
                     "type": "string"
                 },
-                "secretKey": {
+                "secret-key": {
                     "type": "string"
-                }
-            }
-        },
-        "config.Timer": {
-            "type": "object",
-            "properties": {
-                "detail": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/config.Detail"
-                    }
-                },
-                "spec": {
-                    "description": "CRON表达式",
-                    "type": "string"
-                },
-                "start": {
-                    "description": "是否启用",
-                    "type": "boolean"
                 }
             }
         },
@@ -5419,7 +6615,7 @@
                     "description": "日志文件夹",
                     "type": "string"
                 },
-                "encodeLevel": {
+                "encode-level": {
                     "description": "编码级",
                     "type": "string"
                 },
@@ -5431,7 +6627,7 @@
                     "description": "级别",
                     "type": "string"
                 },
-                "logInConsole": {
+                "log-in-console": {
                     "description": "输出控制台",
                     "type": "boolean"
                 },
@@ -5439,11 +6635,15 @@
                     "description": "日志前缀",
                     "type": "string"
                 },
-                "showLine": {
+                "retention-day": {
+                    "description": "日志保留天数",
+                    "type": "integer"
+                },
+                "show-line": {
                     "description": "显示行",
                     "type": "boolean"
                 },
-                "stacktraceKey": {
+                "stacktrace-key": {
                     "description": "栈名",
                     "type": "string"
                 }
@@ -5452,6 +6652,10 @@
         "example.ExaCustomer": {
             "type": "object",
             "properties": {
+                "ID": {
+                    "description": "主键ID",
+                    "type": "integer"
+                },
                 "createdAt": {
                     "description": "创建时间",
                     "type": "string"
@@ -5464,17 +6668,17 @@
                     "description": "客户手机号",
                     "type": "string"
                 },
-                "id": {
-                    "description": "主键ID",
-                    "type": "integer"
-                },
                 "sysUser": {
                     "description": "管理详情",
-                    "$ref": "#/definitions/system.SysUser"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/system.SysUser"
+                        }
+                    ]
                 },
                 "sysUserAuthorityID": {
                     "description": "管理角色ID",
-                    "type": "string"
+                    "type": "integer"
                 },
                 "sysUserId": {
                     "description": "管理ID",
@@ -5489,6 +6693,10 @@
         "example.ExaFile": {
             "type": "object",
             "properties": {
+                "ID": {
+                    "description": "主键ID",
+                    "type": "integer"
+                },
                 "chunkTotal": {
                     "type": "integer"
                 },
@@ -5511,10 +6719,6 @@
                 "filePath": {
                     "type": "string"
                 },
-                "id": {
-                    "description": "主键ID",
-                    "type": "integer"
-                },
                 "isFinish": {
                     "type": "boolean"
                 },
@@ -5527,6 +6731,10 @@
         "example.ExaFileChunk": {
             "type": "object",
             "properties": {
+                "ID": {
+                    "description": "主键ID",
+                    "type": "integer"
+                },
                 "createdAt": {
                     "description": "创建时间",
                     "type": "string"
@@ -5540,10 +6748,6 @@
                 "fileChunkPath": {
                     "type": "string"
                 },
-                "id": {
-                    "description": "主键ID",
-                    "type": "integer"
-                },
                 "updatedAt": {
                     "description": "更新时间",
                     "type": "string"
@@ -5553,13 +6757,13 @@
         "example.ExaFileUploadAndDownload": {
             "type": "object",
             "properties": {
+                "ID": {
+                    "description": "主键ID",
+                    "type": "integer"
+                },
                 "createdAt": {
                     "description": "创建时间",
                     "type": "string"
-                },
-                "id": {
-                    "description": "主键ID",
-                    "type": "integer"
                 },
                 "key": {
                     "description": "编号",
@@ -5583,18 +6787,72 @@
                 }
             }
         },
-        "example.ExcelInfo": {
+        "github_com_flipped-aurora_gin-vue-admin_server_config.Email": {
             "type": "object",
             "properties": {
-                "fileName": {
-                    "description": "文件名",
+                "from": {
+                    "description": "发件人  你自己要发邮件的邮箱",
                     "type": "string"
                 },
-                "infoList": {
+                "host": {
+                    "description": "服务器地址 例如 smtp.qq.com  请前往QQ或者你要发邮件的邮箱查看其smtp协议",
+                    "type": "string"
+                },
+                "is-ssl": {
+                    "description": "是否SSL   是否开启SSL",
+                    "type": "boolean"
+                },
+                "nickname": {
+                    "description": "昵称    发件人昵称 通常为自己的邮箱",
+                    "type": "string"
+                },
+                "port": {
+                    "description": "端口     请前往QQ或者你要发邮件的邮箱查看其smtp协议 大多为 465",
+                    "type": "integer"
+                },
+                "secret": {
+                    "description": "密钥    用于登录的密钥 最好不要用邮箱密码 去邮箱smtp申请一个用于登录的密钥",
+                    "type": "string"
+                },
+                "to": {
+                    "description": "收件人:多个以英文逗号分隔 例：a@qq.com b@qq.com 正式开发中请把此项目作为参数使用",
+                    "type": "string"
+                }
+            }
+        },
+        "model.Info": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "description": "主键ID",
+                    "type": "integer"
+                },
+                "attachments": {
+                    "description": "附件",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/system.SysBaseMenu"
+                        "type": "object"
                     }
+                },
+                "content": {
+                    "description": "内容",
+                    "type": "string"
+                },
+                "createdAt": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "title": {
+                    "description": "标题",
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "description": "更新时间",
+                    "type": "string"
+                },
+                "userID": {
+                    "description": "作者",
+                    "type": "integer"
                 }
             }
         },
@@ -5603,7 +6861,7 @@
             "properties": {
                 "authorityId": {
                     "description": "角色ID",
-                    "type": "string"
+                    "type": "integer"
                 },
                 "menus": {
                     "type": "array",
@@ -5613,12 +6871,15 @@
                 }
             }
         },
+        "request.AutoCode": {
+            "type": "object"
+        },
         "request.CasbinInReceive": {
             "type": "object",
             "properties": {
                 "authorityId": {
                     "description": "权限id",
-                    "type": "string"
+                    "type": "integer"
                 },
                 "casbinInfos": {
                     "type": "array",
@@ -5641,7 +6902,7 @@
                 }
             }
         },
-        "request.ChangePasswordStruct": {
+        "request.ChangePasswordReq": {
             "type": "object",
             "properties": {
                 "newPassword": {
@@ -5650,10 +6911,6 @@
                 },
                 "password": {
                     "description": "密码",
-                    "type": "string"
-                },
-                "username": {
-                    "description": "用户名",
                     "type": "string"
                 }
             }
@@ -5666,7 +6923,7 @@
             "properties": {
                 "authorityId": {
                     "description": "角色ID",
-                    "type": "string"
+                    "type": "integer"
                 }
             }
         },
@@ -5675,7 +6932,7 @@
             "properties": {
                 "id": {
                     "description": "主键ID",
-                    "type": "number"
+                    "type": "integer"
                 }
             }
         },
@@ -5693,12 +6950,19 @@
         "request.InitDB": {
             "type": "object",
             "required": [
-                "dbName",
-                "userName"
+                "adminPassword",
+                "dbName"
             ],
             "properties": {
+                "adminPassword": {
+                    "type": "string"
+                },
                 "dbName": {
                     "description": "数据库名",
+                    "type": "string"
+                },
+                "dbPath": {
+                    "description": "sqlite数据库文件路径",
                     "type": "string"
                 },
                 "dbType": {
@@ -5747,6 +7011,10 @@
         "request.PageInfo": {
             "type": "object",
             "properties": {
+                "keyword": {
+                    "description": "关键字",
+                    "type": "string"
+                },
                 "page": {
                     "description": "页码",
                     "type": "integer"
@@ -5761,31 +7029,50 @@
             "type": "object",
             "properties": {
                 "authorityId": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "int 角色id"
                 },
                 "authorityIds": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
+                    "type": "string",
+                    "example": "[]uint 角色id"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "电子邮箱"
+                },
+                "enable": {
+                    "type": "string",
+                    "example": "int 是否启用"
                 },
                 "headerImg": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "头像链接"
                 },
                 "nickName": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "昵称"
                 },
                 "passWord": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "密码"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "电话号码"
                 },
                 "userName": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "用户名"
                 }
             }
         },
         "request.SearchApiParams": {
             "type": "object",
             "properties": {
+                "ID": {
+                    "description": "主键ID",
+                    "type": "integer"
+                },
                 "apiGroup": {
                     "description": "api组",
                     "type": "string"
@@ -5802,9 +7089,9 @@
                     "description": "api中文描述",
                     "type": "string"
                 },
-                "id": {
-                    "description": "主键ID",
-                    "type": "integer"
+                "keyword": {
+                    "description": "关键字",
+                    "type": "string"
                 },
                 "method": {
                     "description": "方法:创建POST(默认)|查看GET|更新PUT|删除DELETE",
@@ -5837,7 +7124,7 @@
             "properties": {
                 "authorityId": {
                     "description": "角色ID",
-                    "type": "string"
+                    "type": "integer"
                 }
             }
         },
@@ -5848,7 +7135,7 @@
                     "description": "角色ID",
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "type": "integer"
                     }
                 },
                 "id": {
@@ -5860,7 +7147,7 @@
             "type": "object",
             "properties": {
                 "authorityId": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "menuID": {
                     "type": "integer"
@@ -5873,15 +7160,44 @@
                 }
             }
         },
-        "request.SysAutoHistory": {
+        "request.SysAutoCodePackageCreate": {
             "type": "object",
             "properties": {
-                "page": {
-                    "description": "页码",
-                    "type": "integer"
+                "desc": {
+                    "type": "string",
+                    "example": "描述"
                 },
-                "pageSize": {
-                    "description": "每页大小",
+                "label": {
+                    "type": "string",
+                    "example": "展示名"
+                },
+                "packageName": {
+                    "type": "string",
+                    "example": "包名"
+                },
+                "template": {
+                    "type": "string",
+                    "example": "模版"
+                }
+            }
+        },
+        "request.SysAutoHistoryRollBack": {
+            "type": "object",
+            "properties": {
+                "deleteApi": {
+                    "description": "是否删除接口",
+                    "type": "boolean"
+                },
+                "deleteMenu": {
+                    "description": "是否删除菜单",
+                    "type": "boolean"
+                },
+                "deleteTable": {
+                    "description": "是否删除表",
+                    "type": "boolean"
+                },
+                "id": {
+                    "description": "主键ID",
                     "type": "integer"
                 }
             }
@@ -5952,9 +7268,7 @@
         "response.PageResult": {
             "type": "object",
             "properties": {
-                "list": {
-                    "type": "object"
-                },
+                "list": {},
                 "page": {
                     "type": "integer"
                 },
@@ -5983,9 +7297,7 @@
                 "code": {
                     "type": "integer"
                 },
-                "data": {
-                    "type": "object"
-                },
+                "data": {},
                 "msg": {
                     "type": "string"
                 }
@@ -6029,7 +7341,7 @@
                 },
                 "oldAuthorityId": {
                     "description": "旧角色ID",
-                    "type": "string"
+                    "type": "integer"
                 }
             }
         },
@@ -6069,6 +7381,9 @@
                 "captchaLength": {
                     "type": "integer"
                 },
+                "openCaptcha": {
+                    "type": "boolean"
+                },
                 "picPath": {
                     "type": "string"
                 }
@@ -6101,86 +7416,88 @@
                 }
             }
         },
-        "system.AutoCodeStruct": {
+        "system.Condition": {
             "type": "object",
             "properties": {
-                "abbreviation": {
-                    "description": "Struct简称",
+                "ID": {
+                    "description": "主键ID",
+                    "type": "integer"
+                },
+                "column": {
                     "type": "string"
                 },
-                "autoCreateApiToSql": {
-                    "description": "是否自动创建api",
-                    "type": "boolean"
-                },
-                "autoMoveFile": {
-                    "description": "是否自动移动文件",
-                    "type": "boolean"
-                },
-                "description": {
-                    "description": "Struct中文名称",
+                "createdAt": {
+                    "description": "创建时间",
                     "type": "string"
                 },
-                "fields": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/system.Field"
-                    }
-                },
-                "humpPackageName": {
-                    "description": "go文件名称",
+                "from": {
                     "type": "string"
                 },
-                "packageName": {
-                    "description": "文件名称",
+                "operator": {
                     "type": "string"
                 },
-                "structName": {
-                    "description": "Struct名称",
+                "templateID": {
                     "type": "string"
                 },
-                "tableName": {
-                    "description": "表名",
+                "updatedAt": {
+                    "description": "更新时间",
                     "type": "string"
                 }
             }
         },
-        "system.Field": {
+        "system.JoinTemplate": {
             "type": "object",
             "properties": {
-                "columnName": {
-                    "description": "数据库字段",
+                "ID": {
+                    "description": "主键ID",
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "description": "创建时间",
                     "type": "string"
                 },
-                "comment": {
-                    "description": "数据库字段描述",
+                "joins": {
                     "type": "string"
                 },
-                "dataTypeLong": {
-                    "description": "数据库字段长度",
+                "on": {
                     "type": "string"
                 },
-                "dictType": {
-                    "description": "字典",
+                "table": {
                     "type": "string"
                 },
-                "fieldDesc": {
-                    "description": "中文名",
+                "templateID": {
                     "type": "string"
                 },
-                "fieldJson": {
-                    "description": "FieldJson",
+                "updatedAt": {
+                    "description": "更新时间",
+                    "type": "string"
+                }
+            }
+        },
+        "system.Meta": {
+            "type": "object",
+            "properties": {
+                "activeName": {
                     "type": "string"
                 },
-                "fieldName": {
-                    "description": "Field名",
+                "closeTab": {
+                    "description": "自动关闭tab",
+                    "type": "boolean"
+                },
+                "defaultMenu": {
+                    "description": "是否是基础路由（开发中）",
+                    "type": "boolean"
+                },
+                "icon": {
+                    "description": "菜单图标",
                     "type": "string"
                 },
-                "fieldSearchType": {
-                    "description": "搜索条件",
-                    "type": "string"
+                "keepAlive": {
+                    "description": "是否缓存",
+                    "type": "boolean"
                 },
-                "fieldType": {
-                    "description": "Field数据类型",
+                "title": {
+                    "description": "菜单名",
                     "type": "string"
                 }
             }
@@ -6188,6 +7505,10 @@
         "system.SysApi": {
             "type": "object",
             "properties": {
+                "ID": {
+                    "description": "主键ID",
+                    "type": "integer"
+                },
                 "apiGroup": {
                     "description": "api组",
                     "type": "string"
@@ -6199,10 +7520,6 @@
                 "description": {
                     "description": "api中文描述",
                     "type": "string"
-                },
-                "id": {
-                    "description": "主键ID",
-                    "type": "integer"
                 },
                 "method": {
                     "description": "方法:创建POST(默认)|查看GET|更新PUT|删除DELETE",
@@ -6223,7 +7540,7 @@
             "properties": {
                 "authorityId": {
                     "description": "角色ID",
-                    "type": "string"
+                    "type": "integer"
                 },
                 "authorityName": {
                     "description": "角色名",
@@ -6260,7 +7577,7 @@
                 },
                 "parentId": {
                     "description": "父角色ID",
-                    "type": "string"
+                    "type": "integer"
                 },
                 "updatedAt": {
                     "description": "更新时间",
@@ -6271,6 +7588,10 @@
         "system.SysBaseMenu": {
             "type": "object",
             "properties": {
+                "ID": {
+                    "description": "主键ID",
+                    "type": "integer"
+                },
                 "authoritys": {
                     "type": "array",
                     "items": {
@@ -6283,10 +7604,6 @@
                         "$ref": "#/definitions/system.SysBaseMenu"
                     }
                 },
-                "closeTab": {
-                    "description": "自动关闭tab",
-                    "type": "boolean"
-                },
                 "component": {
                     "description": "对应前端文件路径",
                     "type": "string"
@@ -6295,24 +7612,8 @@
                     "description": "创建时间",
                     "type": "string"
                 },
-                "defaultMenu": {
-                    "description": "是否是基础路由（开发中）",
-                    "type": "boolean"
-                },
                 "hidden": {
                     "description": "是否在列表隐藏",
-                    "type": "boolean"
-                },
-                "icon": {
-                    "description": "菜单图标",
-                    "type": "string"
-                },
-                "id": {
-                    "description": "主键ID",
-                    "type": "integer"
-                },
-                "keepAlive": {
-                    "description": "是否缓存",
                     "type": "boolean"
                 },
                 "menuBtn": {
@@ -6320,6 +7621,14 @@
                     "items": {
                         "$ref": "#/definitions/system.SysBaseMenuBtn"
                     }
+                },
+                "meta": {
+                    "description": "附加属性",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/system.Meta"
+                        }
+                    ]
                 },
                 "name": {
                     "description": "路由name",
@@ -6333,7 +7642,7 @@
                 },
                 "parentId": {
                     "description": "父菜单ID",
-                    "type": "string"
+                    "type": "integer"
                 },
                 "path": {
                     "description": "路由path",
@@ -6342,10 +7651,6 @@
                 "sort": {
                     "description": "排序标记",
                     "type": "integer"
-                },
-                "title": {
-                    "description": "菜单名",
-                    "type": "string"
                 },
                 "updatedAt": {
                     "description": "更新时间",
@@ -6356,16 +7661,16 @@
         "system.SysBaseMenuBtn": {
             "type": "object",
             "properties": {
+                "ID": {
+                    "description": "主键ID",
+                    "type": "integer"
+                },
                 "createdAt": {
                     "description": "创建时间",
                     "type": "string"
                 },
                 "desc": {
                     "type": "string"
-                },
-                "id": {
-                    "description": "主键ID",
-                    "type": "integer"
                 },
                 "name": {
                     "type": "string"
@@ -6382,13 +7687,13 @@
         "system.SysBaseMenuParameter": {
             "type": "object",
             "properties": {
+                "ID": {
+                    "description": "主键ID",
+                    "type": "integer"
+                },
                 "createdAt": {
                     "description": "创建时间",
                     "type": "string"
-                },
-                "id": {
-                    "description": "主键ID",
-                    "type": "integer"
                 },
                 "key": {
                     "description": "地址栏携带参数的key",
@@ -6414,6 +7719,10 @@
         "system.SysDictionary": {
             "type": "object",
             "properties": {
+                "ID": {
+                    "description": "主键ID",
+                    "type": "integer"
+                },
                 "createdAt": {
                     "description": "创建时间",
                     "type": "string"
@@ -6421,10 +7730,6 @@
                 "desc": {
                     "description": "描述",
                     "type": "string"
-                },
-                "id": {
-                    "description": "主键ID",
-                    "type": "integer"
                 },
                 "name": {
                     "description": "字典名（中）",
@@ -6453,13 +7758,17 @@
         "system.SysDictionaryDetail": {
             "type": "object",
             "properties": {
+                "ID": {
+                    "description": "主键ID",
+                    "type": "integer"
+                },
                 "createdAt": {
                     "description": "创建时间",
                     "type": "string"
                 },
-                "id": {
-                    "description": "主键ID",
-                    "type": "integer"
+                "extend": {
+                    "description": "扩展值",
+                    "type": "string"
                 },
                 "label": {
                     "description": "展示值",
@@ -6483,13 +7792,72 @@
                 },
                 "value": {
                     "description": "字典值",
+                    "type": "string"
+                }
+            }
+        },
+        "system.SysExportTemplate": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "description": "主键ID",
                     "type": "integer"
+                },
+                "conditions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/system.Condition"
+                    }
+                },
+                "createdAt": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "dbName": {
+                    "description": "数据库名称",
+                    "type": "string"
+                },
+                "joinTemplate": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/system.JoinTemplate"
+                    }
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "模板名称",
+                    "type": "string"
+                },
+                "order": {
+                    "type": "string"
+                },
+                "tableName": {
+                    "description": "表名称",
+                    "type": "string"
+                },
+                "templateID": {
+                    "description": "模板标识",
+                    "type": "string"
+                },
+                "templateInfo": {
+                    "description": "模板信息",
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "description": "更新时间",
+                    "type": "string"
                 }
             }
         },
         "system.SysMenu": {
             "type": "object",
             "properties": {
+                "ID": {
+                    "description": "主键ID",
+                    "type": "integer"
+                },
                 "authoritys": {
                     "type": "array",
                     "items": {
@@ -6499,7 +7867,7 @@
                 "btns": {
                     "type": "object",
                     "additionalProperties": {
-                        "type": "string"
+                        "type": "integer"
                     }
                 },
                 "children": {
@@ -6507,10 +7875,6 @@
                     "items": {
                         "$ref": "#/definitions/system.SysMenu"
                     }
-                },
-                "closeTab": {
-                    "description": "自动关闭tab",
-                    "type": "boolean"
                 },
                 "component": {
                     "description": "对应前端文件路径",
@@ -6520,24 +7884,8 @@
                     "description": "创建时间",
                     "type": "string"
                 },
-                "defaultMenu": {
-                    "description": "是否是基础路由（开发中）",
-                    "type": "boolean"
-                },
                 "hidden": {
                     "description": "是否在列表隐藏",
-                    "type": "boolean"
-                },
-                "icon": {
-                    "description": "菜单图标",
-                    "type": "string"
-                },
-                "id": {
-                    "description": "主键ID",
-                    "type": "integer"
-                },
-                "keepAlive": {
-                    "description": "是否缓存",
                     "type": "boolean"
                 },
                 "menuBtn": {
@@ -6547,7 +7895,15 @@
                     }
                 },
                 "menuId": {
-                    "type": "string"
+                    "type": "integer"
+                },
+                "meta": {
+                    "description": "附加属性",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/system.Meta"
+                        }
+                    ]
                 },
                 "name": {
                     "description": "路由name",
@@ -6561,7 +7917,7 @@
                 },
                 "parentId": {
                     "description": "父菜单ID",
-                    "type": "string"
+                    "type": "integer"
                 },
                 "path": {
                     "description": "路由path",
@@ -6570,10 +7926,6 @@
                 "sort": {
                     "description": "排序标记",
                     "type": "integer"
-                },
-                "title": {
-                    "description": "菜单名",
-                    "type": "string"
                 },
                 "updatedAt": {
                     "description": "更新时间",
@@ -6584,6 +7936,10 @@
         "system.SysOperationRecord": {
             "type": "object",
             "properties": {
+                "ID": {
+                    "description": "主键ID",
+                    "type": "integer"
+                },
                 "agent": {
                     "description": "代理",
                     "type": "string"
@@ -6599,10 +7955,6 @@
                 "error_message": {
                     "description": "错误信息",
                     "type": "string"
-                },
-                "id": {
-                    "description": "主键ID",
-                    "type": "integer"
                 },
                 "ip": {
                     "description": "请求ip",
@@ -6644,9 +7996,9 @@
         "system.SysUser": {
             "type": "object",
             "properties": {
-                "activeColor": {
-                    "description": "活跃颜色",
-                    "type": "string"
+                "ID": {
+                    "description": "主键ID",
+                    "type": "integer"
                 },
                 "authorities": {
                     "type": "array",
@@ -6659,7 +8011,7 @@
                 },
                 "authorityId": {
                     "description": "用户角色ID",
-                    "type": "string"
+                    "type": "integer"
                 },
                 "baseColor": {
                     "description": "基础颜色",
@@ -6673,20 +8025,20 @@
                     "description": "用户邮箱",
                     "type": "string"
                 },
+                "enable": {
+                    "description": "用户是否被冻结 1正常 2冻结",
+                    "type": "integer"
+                },
                 "headerImg": {
                     "description": "用户头像",
                     "type": "string"
-                },
-                "id": {
-                    "description": "主键ID",
-                    "type": "integer"
                 },
                 "nickName": {
                     "description": "用户昵称",
                     "type": "string"
                 },
                 "phone": {
-                    "description": "用户角色ID",
+                    "description": "用户手机号",
                     "type": "string"
                 },
                 "sideMode": {

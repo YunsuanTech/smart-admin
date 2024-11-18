@@ -2,23 +2,52 @@
   <div class="break-point">
     <div class="gva-table-box">
       <el-divider content-position="left">大文件上传</el-divider>
-      <form id="fromCont" method="post">
-        <div class="fileUpload" @click="inputChange">
+      <form
+        id="fromCont"
+        method="post"
+      >
+        <div
+          class="fileUpload"
+          @click="inputChange"
+        >
           选择文件
-          <input v-show="false" id="file" ref="FileInput" multiple="multiple" type="file" @change="choseFile">
+          <input
+            v-show="false"
+            id="file"
+            ref="FileInput"
+            multiple="multiple"
+            type="file"
+            @change="choseFile"
+          >
         </div>
       </form>
-      <el-button :disabled="limitFileSize" type="primary" size="small" class="uploadBtn" @click="getFile">上传文件</el-button>
+      <el-button
+        :disabled="limitFileSize"
+        type="primary"
+        class="uploadBtn"
+        @click="getFile"
+      >上传文件</el-button>
       <div class="el-upload__tip">请上传不超过5MB的文件</div>
       <div class="list">
-        <transition name="list" tag="p">
-          <div v-if="file" class="list-item">
+        <transition
+          name="list"
+          tag="p"
+        >
+          <div
+            v-if="file"
+            class="list-item"
+          >
             <el-icon>
               <document />
             </el-icon>
             <span>{{ file.name }}</span>
             <span class="percentage">{{ percentage }}%</span>
-            <el-progress :show-text="false" :text-inside="false" :stroke-width="2" :percentage="percentage" />
+            <el-progress
+              :show-text="false"
+              :text-inside="false"
+              :stroke-width="2"
+              :percentage="percentage"
+            />
           </div>
         </transition>
       </div>
@@ -39,6 +68,10 @@ import {
 import { ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 
+defineOptions({
+  name: 'BreakPoint'
+})
+
 const file = ref(null)
 const fileMd5 = ref('')
 const formDataList = ref([])
@@ -50,6 +83,11 @@ const percentageFlage = ref(true)
 
 // 选中文件的函数
 const choseFile = async(e) => {
+
+  // 点击选择文件后取消 直接return
+  if (!e.target.files.length) {
+    return
+  }
   const fileR = new FileReader() // 创建一个reader用来读取文件流
   const fileInput = e.target.files[0] // 获取当前文件
   const maxSize = 5 * 1024 * 1024
@@ -103,7 +141,6 @@ const choseFile = async(e) => {
         ElMessage.success('文件已秒传')
       }
       waitNum.value = waitUpLoad.value.length // 记录长度用于百分比展示
-      console.log(waitNum.value)
     }
   } else {
     limitFileSize.value = true
@@ -140,7 +177,7 @@ const sliceFile = () => {
         })
 }
 
-watch(waitNum, () => { percentage.value = Math.floor(((formDataList.value.length - waitNum.value) / formDataList.value.length) * 100) })
+watch(() => waitNum.value, () => { percentage.value = Math.floor(((formDataList.value.length - waitNum.value) / formDataList.value.length) * 100) })
 
 const upLoadFileSlice = async(item) => {
   // 切片上传
@@ -175,13 +212,6 @@ const inputChange = () => {
 }
 </script>
 
-<script>
-
-export default {
-  name: 'BreakPoint'
-}
-</script>
-
 <style lang='scss' scoped>
 h3 {
   margin: 40px 0 0;
@@ -207,7 +237,6 @@ a {
     line-height: 20px;
     position: relative;
     cursor: pointer;
-    color: #000;
     border: 1px solid #c1c1c1;
     border-radius: 4px;
     overflow: hidden;

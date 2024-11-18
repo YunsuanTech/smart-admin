@@ -1,34 +1,15 @@
 package initialize
 
 import (
-	email "github.com/flipped-aurora/gva-plugins/email" // 在线仓库模式go
-	"smart-admin/server/global"
-	//"smart-admin/server/plugin/email" // 本地插件仓库地址模式
+	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/gin-gonic/gin"
-	"smart-admin/server/plugin/example_plugin"
-	"smart-admin/server/utils/plugin"
 )
 
-func PluginInit(group *gin.RouterGroup, Plugin ...plugin.Plugin) {
-	for i := range Plugin {
-		PluginGroup := group.Group(Plugin[i].RouterPath())
-		Plugin[i].Register(PluginGroup)
+func InstallPlugin(PrivateGroup *gin.RouterGroup, PublicRouter *gin.RouterGroup, engine *gin.Engine) {
+	if global.GVA_DB == nil {
+		global.GVA_LOG.Info("项目暂未初始化，无法安装插件，初始化后重启项目即可完成插件安装")
+		return
 	}
-}
-
-func InstallPlugin(PublicGroup *gin.RouterGroup, PrivateGroup *gin.RouterGroup) {
-	//  添加开放权限的插件 示例
-	PluginInit(PublicGroup,
-		example_plugin.ExamplePlugin)
-
-	//  添加跟角色挂钩权限的插件 示例 本地示例模式于在线仓库模式注意上方的import 可以自行切换 效果相同
-	PluginInit(PrivateGroup, email.CreateEmailPlug(
-		global.GVA_CONFIG.Email.To,
-		global.GVA_CONFIG.Email.From,
-		global.GVA_CONFIG.Email.Host,
-		global.GVA_CONFIG.Email.Secret,
-		global.GVA_CONFIG.Email.Nickname,
-		global.GVA_CONFIG.Email.Port,
-		global.GVA_CONFIG.Email.IsSSL,
-	))
+	bizPluginV1(PrivateGroup, PublicRouter)
+	bizPluginV2(engine)
 }

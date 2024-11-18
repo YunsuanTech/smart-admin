@@ -1,19 +1,17 @@
 package v1
 
 import (
-	"smart-admin/server/api/v1/autocode"
-	"smart-admin/server/api/v1/compare"
-	"smart-admin/server/api/v1/example"
-	"smart-admin/server/api/v1/system"
-	"smart-admin/server/api/v1/twitter"
+	"github.com/flipped-aurora/gin-vue-admin/server/api/v1/Binance"
+	"github.com/flipped-aurora/gin-vue-admin/server/api/v1/Twitter"
+	"github.com/flipped-aurora/gin-vue-admin/server/api/v1/example"
+	"github.com/flipped-aurora/gin-vue-admin/server/api/v1/system"
 )
 
-type ApiGroup struct {
-	SystemApiGroup   system.ApiGroup
-	ExampleApiGroup  example.ApiGroup
-	AutoCodeApiGroup autocode.ApiGroup
-	TwitterApiGroup  twitter.ApiGroup
-	CompareGroup     compare.ApiGroup
-}
-
 var ApiGroupApp = new(ApiGroup)
+
+type ApiGroup struct {
+	SystemApiGroup  system.ApiGroup
+	ExampleApiGroup example.ApiGroup
+	TwitterApiGroup Twitter.ApiGroup
+	BinanceApiGroup Binance.ApiGroup
+}

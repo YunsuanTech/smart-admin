@@ -1,19 +1,15 @@
-package twitter
+package Twitter
 
-import (
-	"smart-admin/server/service"
-)
+import "github.com/flipped-aurora/gin-vue-admin/server/service"
 
 type ApiGroup struct {
-	TSystemApi
-	TMonitoringApi
-	TTwitterUserApi
-	TTwitterContentApi
+	TwitterUsersApi
+	ScoringRulesApi
+	ScoreRecordApi
 }
 
 var (
-	tSystemService         = service.ServiceGroupApp.TwitterServiceGroup.TSystemService
-	tMonitoringService     = service.ServiceGroupApp.TwitterServiceGroup.TMonitoringService
-	tTwitterUserService    = service.ServiceGroupApp.TwitterServiceGroup.TTwitterUserService
-	tTwitterContentService = service.ServiceGroupApp.TwitterServiceGroup.TTwitterContentService
+	twitterUsersService = service.ServiceGroupApp.TwitterServiceGroup.TwitterUsersService
+	scoringRulesService = service.ServiceGroupApp.TwitterServiceGroup.ScoringRulesService
+	scoreRecordService  = service.ServiceGroupApp.TwitterServiceGroup.ScoreRecordService
 )

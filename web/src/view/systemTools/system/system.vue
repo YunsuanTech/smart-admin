@@ -1,382 +1,738 @@
 <template>
   <div class="system">
-    <el-form ref="form" :model="config" label-width="240px">
+    <el-form
+        ref="form"
+        :model="config"
+        label-width="240px"
+    >
       <!--  System start  -->
-      <el-collapse v-model="activeNames">
-        <el-collapse-item title="系统配置" name="1">
-          <el-form-item label="环境值">
-            <el-input v-model="config.system.env" />
-          </el-form-item>
+      <el-tabs v-model="activeNames">
+        <el-tab-pane
+            label="系统配置"
+            name="1"
+            class="mt-3.5"
+        >
           <el-form-item label="端口值">
-            <el-input v-model.number="config.system.addr" />
+            <el-input-number v-model="config.system.addr" placeholder="请输入端口值"/>
           </el-form-item>
           <el-form-item label="数据库类型">
-            <el-select v-model="config.system.dbType" style="width:100%">
-              <el-option value="mysql" />
-              <el-option value="pgsql" />
+            <el-select
+                v-model="config.system['db-type']"
+                class="w-full"
+            >
+              <el-option value="mysql"/>
+              <el-option value="pgsql"/>
+              <el-option value="mssql"/>
+              <el-option value="sqlite"/>
+              <el-option value="oracle"/>
             </el-select>
           </el-form-item>
           <el-form-item label="Oss类型">
-            <el-select v-model="config.system.ossType" style="width:100%">
-              <el-option value="local" />
-              <el-option value="qiniu" />
-              <el-option value="tencent-cos" />
-              <el-option value="aliyun-oss" />
-              <el-option value="huawei-obs" />
+            <el-select
+                v-model="config.system['oss-type']"
+                class="w-full"
+            >
+              <el-option value="local">本地</el-option>
+              <el-option value="qiniu">七牛</el-option>
+              <el-option value="tencent-cos">腾讯云COS</el-option>
+              <el-option value="aliyun-oss">阿里云OSS</el-option>
+              <el-option value="huawei-obs">华为云OBS</el-option>
+              <el-option value="cloudflare-r2">cloudflare R2</el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="多点登录拦截">
-            <el-checkbox v-model="config.system.useMultipoint">开启</el-checkbox>
+            <el-switch v-model="config.system['use-multipoint']"/>
           </el-form-item>
           <el-form-item label="开启redis">
-            <el-checkbox v-model="config.system.useRedis">开启</el-checkbox>
+            <el-switch v-model="config.system['use-redis']"/>
+          </el-form-item>
+          <el-form-item label="开启Mongo">
+            <el-switch v-model="config.system['use-mongo']"/>
+          </el-form-item>
+          <el-form-item label="严格角色模式">
+            <el-switch v-model="config.system['use-strict-auth']"/>
           </el-form-item>
           <el-form-item label="限流次数">
-            <el-input-number v-model.number="config.system.iplimitCount" />
+            <el-input-number v-model.number="config.system['iplimit-count']"/>
           </el-form-item>
           <el-form-item label="限流时间">
-            <el-input-number v-model.number="config.system.iplimitTime" />
+            <el-input-number v-model.number="config.system['iplimit-time']"/>
           </el-form-item>
-        </el-collapse-item>
-        <el-collapse-item title="jwt签名" name="2">
+          <el-tooltip
+              content="请修改完成后，注意一并修改前端env环境下的VITE_BASE_PATH"
+              placement="top-start"
+          >
+            <el-form-item label="全局路由前缀">
+              <el-input v-model.trim="config.system['router-prefix']" placeholder="请输入全局路由前缀"/>
+            </el-form-item>
+          </el-tooltip>
+        </el-tab-pane>
+        <el-tab-pane
+            label="jwt签名"
+            name="2"
+            class="mt-3.5"
+        >
           <el-form-item label="jwt签名">
-            <el-input v-model="config.jwt.signingKey" />
+            <el-input v-model.trim="config.jwt['signing-key']" placeholder="请输入jwt签名">
+              <template #append>
+                <el-button @click="getUUID">生成</el-button>
+              </template>
+            </el-input>
           </el-form-item>
-          <el-form-item label="有效期（秒）">
-            <el-input v-model="config.jwt.expiresTime" />
+          <el-form-item label="有效期">
+            <el-input v-model.trim="config.jwt['expires-time']" placeholder="请输入有效期"/>
           </el-form-item>
-          <el-form-item label="缓冲期（秒）">
-            <el-input v-model="config.jwt.bufferTime" />
+          <el-form-item label="缓冲期">
+            <el-input v-model.trim="config.jwt['buffer-time']" placeholder="请输入缓冲期"/>
           </el-form-item>
           <el-form-item label="签发者">
-            <el-input v-model="config.jwt.issuer" />
+            <el-input v-model.trim="config.jwt.issuer" placeholder="请输入签发者"/>
           </el-form-item>
-        </el-collapse-item>
-        <el-collapse-item title="Zap日志配置" name="3">
+        </el-tab-pane>
+        <el-tab-pane
+            label="Zap日志配置"
+            name="3"
+            class="mt-3.5"
+        >
           <el-form-item label="级别">
-            <el-input v-model.number="config.zap.level" />
+            <el-select v-model="config.zap.level">
+              <el-option value="off" label="关闭"/>
+              <el-option value="fatal" label="致命"/>
+              <el-option value="error" label="错误"/>
+              <el-option value="warn" label="警告"/>
+              <el-option value="info" label="信息"/>
+              <el-option value="debug" label="调试"/>
+              <el-option value="trace" label="跟踪"/>
+            </el-select>
           </el-form-item>
           <el-form-item label="输出">
-            <el-input v-model="config.zap.format" />
+            <el-select v-model="config.zap.format">
+              <el-option value="console" label="console"/>
+              <el-option value="json" label="json"/>
+            </el-select>
           </el-form-item>
           <el-form-item label="日志前缀">
-            <el-input v-model="config.zap.prefix" />
+            <el-input v-model.trim="config.zap.prefix" placeholder="请输入日志前缀"/>
           </el-form-item>
           <el-form-item label="日志文件夹">
-            <el-input v-model="config.zap.director" />
+            <el-input v-model.trim="config.zap.director" placeholder="请输入日志文件夹"/>
           </el-form-item>
           <el-form-item label="编码级">
-            <el-input v-model="config.zap.encodeLevel" />
+            <el-select v-model="config.zap['encode-level']" class="w-6/12">
+              <el-option value="LowercaseLevelEncoder" label="LowercaseLevelEncoder"/>
+              <el-option value="LowercaseColorLevelEncoder" label="LowercaseColorLevelEncoder"/>
+              <el-option value="CapitalLevelEncoder" label="CapitalLevelEncoder"/>
+              <el-option value="CapitalColorLevelEncoder" label="CapitalColorLevelEncoder"/>
+            </el-select>
           </el-form-item>
           <el-form-item label="栈名">
-            <el-input v-model="config.zap.stacktraceKey" />
+            <el-input v-model.trim="config.zap['stacktrace-key']" placeholder="请输入栈名"/>
+          </el-form-item>
+          <el-form-item label="日志留存时间(默认以天为单位)">
+            <el-input-number v-model="config.zap['retention-day']"/>
           </el-form-item>
           <el-form-item label="显示行">
-            <el-checkbox v-model="config.zap.showLine" />
+            <el-switch v-model="config.zap['show-line']"/>
           </el-form-item>
           <el-form-item label="输出控制台">
-            <el-checkbox v-model="config.zap.logInConsole" />
+            <el-switch v-model="config.zap['log-in-console']"/>
           </el-form-item>
-        </el-collapse-item>
-        <el-collapse-item title="Redis admin数据库配置" name="4">
-          <el-form-item label="db">
-            <el-input v-model="config.redis.db" />
+        </el-tab-pane>
+        <el-tab-pane
+            label="Redis"
+            name="4"
+            class="mt-3.5"
+            v-if="config.system['use-redis']"
+        >
+          <el-form-item label="库">
+            <el-input-number v-model="config.redis.db" min="0" max="16"/>
           </el-form-item>
-          <el-form-item label="addr">
-            <el-input v-model="config.redis.addr" />
+          <el-form-item label="地址">
+            <el-input v-model.trim="config.redis.addr" placeholder="请输入地址"/>
           </el-form-item>
-          <el-form-item label="password">
-            <el-input v-model="config.redis.password" />
+          <el-form-item label="密码">
+            <el-input v-model.trim="config.redis.password" placeholder="请输入密码"/>
           </el-form-item>
-        </el-collapse-item>
-
-        <el-collapse-item title="邮箱配置" name="5">
+        </el-tab-pane>
+        <el-tab-pane
+            label="邮箱配置"
+            name="5"
+            class="mt-3.5"
+        >
           <el-form-item label="接收者邮箱">
-            <el-input v-model="config.email.to" placeholder="可多个，以逗号分隔" />
+            <el-input
+                v-model="config.email.to"
+                placeholder="可多个，以逗号分隔"
+            />
           </el-form-item>
           <el-form-item label="端口">
-            <el-input v-model.number="config.email.port" />
+            <el-input-number v-model="config.email.port" />
           </el-form-item>
           <el-form-item label="发送者邮箱">
-            <el-input v-model="config.email.from" />
+            <el-input v-model.trim="config.email.from" placeholder="请输入发送者邮箱" />
           </el-form-item>
           <el-form-item label="host">
-            <el-input v-model="config.email.host" />
+            <el-input v-model.trim="config.email.host" placeholder="请输入host" />
           </el-form-item>
           <el-form-item label="是否为ssl">
-            <el-checkbox v-model="config.email.isSSL" />
+            <el-switch v-model="config.email['is-ssl']" />
           </el-form-item>
           <el-form-item label="secret">
-            <el-input v-model="config.email.secret" />
+            <el-input v-model.trim="config.email.secret" placeholder="请输入secret"/>
           </el-form-item>
           <el-form-item label="测试邮件">
             <el-button @click="email">测试邮件</el-button>
           </el-form-item>
-        </el-collapse-item>
-        <el-collapse-item title="casbin配置" name="6">
-          <el-form-item label="模型地址">
-            <el-input v-model="config.casbin.modelPath" />
+        </el-tab-pane>
+        <el-tab-pane
+            label="Mongo 数据库配置"
+            name="14"
+            class="mt-3.5"
+            v-if="config.system['use-mongo']"
+        >
+          <el-form-item label="collection name(表名,一般不写)">
+            <el-input v-model.trim="config.mongo.coll" placeholder="请输入collection name"/>
           </el-form-item>
-        </el-collapse-item>
-
-        <el-collapse-item title="验证码配置" name="7">
-          <el-form-item label="keyLong">
-            <el-input v-model.number="config.captcha.keyLong" />
+          <el-form-item label="mongodb 选项">
+            <el-input v-model.trim="config.mongo.options" placeholder="请输入mongodb 选项"/>
           </el-form-item>
-          <el-form-item label="imgWidth">
-            <el-input v-model.number="config.captcha.imgWidth" />
+          <el-form-item label="database name(数据库名)">
+            <el-input v-model.trim="config.mongo.database" placeholder="请输入数据库名"/>
           </el-form-item>
-          <el-form-item label="imgHeight">
-            <el-input v-model.number="config.captcha.imgHeight" />
+          <el-form-item label="用户名">
+            <el-input v-model.trim="config.mongo.username" placeholder="请输入用户名"/>
           </el-form-item>
-        </el-collapse-item>
-        <el-collapse-item title="数据库配置" name="9">
-          <template v-if="config.system.dbType === 'mysql'">
-            <el-form-item label="username">
-              <el-input v-model="config.mysql.username" />
+          <el-form-item label="密码">
+            <el-input v-model.trim="config.mongo.password" placeholder="请输入密码"/>
+          </el-form-item>
+          <el-form-item label="最小连接池">
+            <el-input-number v-model="config.mongo['min-pool-size']" min="0"/>
+          </el-form-item>
+          <el-form-item label="最大连接池">
+            <el-input-number v-model="config.mongo['max-pool-size']" min="100"/>
+          </el-form-item>
+          <el-form-item label="socket超时时间">
+            <el-input-number v-model="config.mongo['socket-timeout-ms']" min="0"/>
+          </el-form-item>
+          <el-form-item label="连接超时时间">
+            <el-input-number v-model="config.mongo['socket-timeout-ms']" min="0"/>
+          </el-form-item>
+          <el-form-item label="是否开启zap日志">
+            <el-switch v-model="config.mongo['is-zap']"/>
+          </el-form-item>
+          <template v-for="(item,k) in config.mongo.hosts">
+            <el-form-item :label="`节点 ${k+1}`">
+              <div v-for="(_,k2) in item" :key="k2">
+                <el-form-item :key="k+k2" :label="k2" label-width="60">
+                  <el-input v-model.trim="item[k2]" :placeholder="k2 === 'host' ? '请输入地址' : '请输入端口'"/>
+                </el-form-item>
+              </div>
+              <el-form-item v-if="k > 0">
+                <el-button type="danger" size="small" plain :icon="Minus" @click="removeNode(k)" class="ml-3"/>
+              </el-form-item>
             </el-form-item>
-            <el-form-item label="password">
-              <el-input v-model="config.mysql.password" />
+          </template>
+          <el-form-item>
+            <el-button type="primary" size="small" plain :icon="Plus" @click="addNode"/>
+          </el-form-item>
+        </el-tab-pane>
+        <el-tab-pane
+            label="验证码配置"
+            name="7"
+            class="mt-3.5"
+        >
+          <el-form-item label="字符长度">
+            <el-input-number v-model="config.captcha['key-long']" min="4" max="6"/>
+          </el-form-item>
+          <el-form-item label="图片宽度">
+            <el-input-number v-model.number="config.captcha['img-width']"/>
+          </el-form-item>
+          <el-form-item label="图片高度">
+            <el-input-number v-model.number="config.captcha['img-height']"/>
+          </el-form-item>
+        </el-tab-pane>
+        <el-tab-pane
+            label="数据库配置"
+            name="9"
+            class="mt-3.5"
+        >
+          <template v-if="config.system['db-type'] === 'mysql'">
+            <el-form-item label="">
+              <h3>MySQL</h3>
             </el-form-item>
-            <el-form-item label="path">
-              <el-input v-model="config.mysql.path" />
+            <el-form-item label="用户名">
+              <el-input v-model.trim="config.mysql.username" placeholder="请输入用户名"/>
             </el-form-item>
-            <el-form-item label="dbname">
-              <el-input v-model="config.mysql.dbname" />
+            <el-form-item label="密码">
+              <el-input v-model.trim="config.mysql.password" placeholder="请输入密码"/>
+            </el-form-item>
+            <el-form-item label="地址">
+              <el-input v-model.trim="config.mysql.path" placeholder="请输入地址"/>
+            </el-form-item>
+            <el-form-item label="数据库名称">
+              <el-input v-model.trim="config.mysql['db-name']" placeholder="请输入数据库名称"/>
+            </el-form-item>
+            <el-form-item label="前缀">
+              <el-input v-model.trim="config.mysql['prefix']" placeholder="默认为空"/>
+            </el-form-item>
+            <el-form-item label="复数表">
+              <el-switch v-model="config.mysql['singular']"/>
+            </el-form-item>
+            <el-form-item label="引擎">
+              <el-input v-model.trim="config.mysql['engine']" placeholder="默认为InnoDB"/>
             </el-form-item>
             <el-form-item label="maxIdleConns">
-              <el-input v-model.number="config.mysql.maxIdleConns" />
+              <el-input-number v-model="config.mysql['max-idle-conns']" :min="1"/>
             </el-form-item>
             <el-form-item label="maxOpenConns">
-              <el-input v-model.number="config.mysql.maxOpenConns" />
+              <el-input-number v-model="config.mysql['max-open-conns']" :min="1"/>
             </el-form-item>
-            <el-form-item label="logMode">
-              <el-checkbox v-model="config.mysql.logMode" />
+            <el-form-item label="写入日志">
+              <el-switch v-model="config.mysql['log-zap']"/>
+            </el-form-item>
+            <el-form-item label="日志模式">
+              <el-select v-model="config.mysql['log-mode']">
+                <el-option value="off" label="关闭"/>
+                <el-option value="fatal" label="致命"/>
+                <el-option value="error" label="错误"/>
+                <el-option value="warn" label="警告"/>
+                <el-option value="info" label="信息"/>
+                <el-option value="debug" label="调试"/>
+                <el-option value="trace" label="跟踪"/>
+              </el-select>
             </el-form-item>
           </template>
-          <template v-if="config.system.dbType === 'pgsql'">
-            <el-form-item label="username">
-              <el-input v-model="config.pgsql.username" />
+          <template v-if="config.system['db-type'] === 'pgsql'">
+            <el-form-item label="">
+              <h3>PostgreSQL</h3>
             </el-form-item>
-            <el-form-item label="password">
-              <el-input v-model="config.pgsql.password" />
+            <el-form-item label="用户名">
+              <el-input v-model="config.pgsql.username" placeholder="请输入用户名"/>
             </el-form-item>
-            <el-form-item label="path">
-              <el-input v-model="config.pgsql.path" />
+            <el-form-item label="密码">
+              <el-input v-model="config.pgsql.password" placeholder="请输入密码"/>
             </el-form-item>
-            <el-form-item label="dbname">
-              <el-input v-model="config.pgsql.dbname" />
+            <el-form-item label="地址">
+              <el-input v-model.trim="config.pgsql.path" placeholder="请输入地址"/>
+            </el-form-item>
+            <el-form-item label="数据库">
+              <el-input v-model.trim="config.pgsql['db-name']" placeholder="请输入数据库"/>
+            </el-form-item>
+            <el-form-item label="前缀">
+              <el-input v-model.trim="config.pgsql['prefix']" placeholder="请输入前缀"/>
+            </el-form-item>
+            <el-form-item label="复数表">
+              <el-switch v-model="config.pgsql['singular']"/>
+            </el-form-item>
+            <el-form-item label="引擎">
+              <el-input v-model.trim="config.pgsql['engine']" placeholder="请输入引擎"/>
             </el-form-item>
             <el-form-item label="maxIdleConns">
-              <el-input v-model.number="config.pgsql.maxIdleConns" />
+              <el-input-number v-model="config.pgsql['max-idle-conns']"/>
             </el-form-item>
             <el-form-item label="maxOpenConns">
-              <el-input v-model.number="config.pgsql.maxOpenConns" />
+              <el-input-number v-model="config.pgsql['max-open-conns']"/>
             </el-form-item>
-            <el-form-item label="logMode">
-              <el-checkbox v-model="config.pgsql.logMode" />
+            <el-form-item label="写入日志">
+              <el-switch v-model="config.pgsql['log-zap']"/>
+            </el-form-item>
+            <el-form-item label="日志模式">
+              <el-select v-model="config.pgsql['log-mode']">
+                <el-option value="off" label="关闭"/>
+                <el-option value="fatal" label="致命"/>
+                <el-option value="error" label="错误"/>
+                <el-option value="warn" label="警告"/>
+                <el-option value="info" label="信息"/>
+                <el-option value="debug" label="调试"/>
+                <el-option value="trace" label="跟踪"/>
+              </el-select>
             </el-form-item>
           </template>
-        </el-collapse-item>
-
-        <el-collapse-item title="oss配置" name="10">
-          <template v-if="config.system.ossType === 'local'">
-            <h2>本地文件配置</h2>
-            <el-form-item label="本地文件路径">
-              <el-input v-model="config.local.path" />
+          <template v-if="config.system['db-type'] === 'mssql'">
+            <el-form-item label="">
+              <h3>MsSQL</h3>
+            </el-form-item>
+            <el-form-item label="用户名">
+              <el-input v-model.trim="config.mssql.username" placeholder="请输入用户名"/>
+            </el-form-item>
+            <el-form-item label.trim="密码">
+              <el-input v-model.trim="config.mssql.password" placeholder="请输入密码"/>
+            </el-form-item>
+            <el-form-item label="地址">
+              <el-input v-model.trim="config.mssql.path" placeholder="请输入地址"/>
+            </el-form-item>
+            <el-form-item label="端口">
+              <el-input v-model.trim="config.mssql.port" placeholder="请输入端口"/>
+            </el-form-item>
+            <el-form-item label="数据库">
+              <el-input v-model.trim="config.mssql['db-name']" placeholder="请输入数据库"/>
+            </el-form-item>
+            <el-form-item label="前缀">
+              <el-input v-model.trim="config.mssql['prefix']" placeholder="请输入前缀"/>
+            </el-form-item>
+            <el-form-item label="复数表">
+              <el-switch v-model="config.mssql['singular']"/>
+            </el-form-item>
+            <el-form-item label="引擎">
+              <el-input v-model.trim="config.mssql['engine']" placeholder="请输入引擎"/>
+            </el-form-item>
+            <el-form-item label="maxIdleConns">
+              <el-input-number v-model="config.mssql['max-idle-conns']"/>
+            </el-form-item>
+            <el-form-item label="maxOpenConns">
+              <el-input-number v-model="config.mssql['max-open-conns']"/>
+            </el-form-item>
+            <el-form-item label="写入日志">
+              <el-switch v-model="config.mssql['log-zap']"/>
+            </el-form-item>
+            <el-form-item label="日志模式">
+              <el-select v-model="config.mssql['log-mode']">
+                <el-option value="off" label="关闭"/>
+                <el-option value="fatal" label="致命"/>
+                <el-option value="error" label="错误"/>
+                <el-option value="warn" label="警告"/>
+                <el-option value="info" label="信息"/>
+                <el-option value="debug" label="调试"/>
+                <el-option value="trace" label="跟踪"/>
+              </el-select>
             </el-form-item>
           </template>
-          <template v-if="config.system.ossType === 'qiniu'">
-            <h2>qiniu上传配置</h2>
+          <template v-if="config.system['db-type'] === 'sqlite'">
+            <el-form-item label="">
+              <h3>sqlite</h3>
+            </el-form-item>
+            <el-form-item label="用户名">
+              <el-input v-model.trim="config.sqlite.username" placeholder="请输入用户名"/>
+            </el-form-item>
+            <el-form-item label="密码">
+              <el-input v-model.trim="config.sqlite.password" placeholder="请输入密码"/>
+            </el-form-item>
+            <el-form-item label="地址">
+              <el-input v-model.trim="config.sqlite.path" placeholder="请输入地址"/>
+            </el-form-item>
+            <el-form-item label="端口">
+              <el-input v-model.trim="config.sqlite.port" placeholder="请输入端口"/>
+            </el-form-item>
+            <el-form-item label="数据库">
+              <el-input v-model.trim="config.sqlite['db-name']" placeholder="请输入数据库"/>
+            </el-form-item>
+            <el-form-item label="maxIdleConns">
+              <el-input-number v-model="config.sqlite['max-idle-conns']"/>
+            </el-form-item>
+            <el-form-item label="maxOpenConns">
+              <el-input-number v-model="config.sqlite['max-open-conns']"/>
+            </el-form-item>
+            <el-form-item label="写入日志">
+              <el-switch v-model="config.sqlite['log-zap']"/>
+            </el-form-item>
+            <el-form-item label="日志模式">
+              <el-select v-model="config.sqlite['log-mode']">
+                <el-option value="off" label="关闭"/>
+                <el-option value="fatal" label="致命"/>
+                <el-option value="error" label="错误"/>
+                <el-option value="warn" label="警告"/>
+                <el-option value="info" label="信息"/>
+                <el-option value="debug" label="调试"/>
+                <el-option value="trace" label="跟踪"/>
+              </el-select>
+            </el-form-item>
+          </template>
+          <template v-if="config.system['db-type'] === 'oracle'">
+            <el-form-item label="">
+              <h3>oracle</h3>
+            </el-form-item>
+            <el-form-item label="用户名">
+              <el-input v-model.trim="config.oracle.username" placeholder="请输入用户名"/>
+            </el-form-item>
+            <el-form-item label="密码">
+              <el-input v-model.trim="config.oracle.password" placeholder="请输入密码"/>
+            </el-form-item>
+            <el-form-item label="地址">
+              <el-input v-model.trim="config.oracle.path" placeholder="请输入地址"/>
+            </el-form-item>
+            <el-form-item label="数据库名称">
+              <el-input v-model.trim="config.oracle['db-name']" placeholder="请输入数据库名称"/>
+            </el-form-item>
+            <el-form-item label="前缀">
+              <el-input v-model.trim="config.oracle['prefix']" placeholder="默认为空"/>
+            </el-form-item>
+            <el-form-item label="复数表">
+              <el-switch v-model="config.oracle['singular']"/>
+            </el-form-item>
+            <el-form-item label="引擎">
+              <el-input v-model.trim="config.oracle['engine']" placeholder="默认为InnoDB"/>
+            </el-form-item>
+            <el-form-item label="maxIdleConns">
+              <el-input-number v-model="config.oracle['max-idle-conns']" :min="1"/>
+            </el-form-item>
+            <el-form-item label="maxOpenConns">
+              <el-input-number v-model="config.oracle['max-open-conns']" :min="1"/>
+            </el-form-item>
+            <el-form-item label="写入日志">
+              <el-switch v-model="config.oracle['log-zap']"/>
+            </el-form-item>
+            <el-form-item label="日志模式">
+              <el-select v-model="config.oracle['log-mode']">
+                <el-option value="off" label="关闭"/>
+                <el-option value="fatal" label="致命"/>
+                <el-option value="error" label="错误"/>
+                <el-option value="warn" label="警告"/>
+                <el-option value="info" label="信息"/>
+                <el-option value="debug" label="调试"/>
+                <el-option value="trace" label="跟踪"/>
+              </el-select>
+            </el-form-item>
+          </template>
+        </el-tab-pane>
+        <el-tab-pane
+            label="oss配置"
+            name="10"
+            class="mt-3.5"
+        >
+          <template v-if="config.system['oss-type'] === 'local'">
+            <h2>本地配置</h2>
+            <el-form-item label="本地文件访问路径">
+              <el-input v-model.trim="config.local.path" placeholder="请输入本地文件访问路径"/>
+            </el-form-item>
+            <el-form-item label="本地文件存储路径">
+              <el-input v-model.trim="config.local['store-path']" placeholder="请输入本地文件存储路径"/>
+            </el-form-item>
+          </template>
+          <template v-if="config.system['oss-type'] === 'qiniu'">
+            <h2>七牛上传配置</h2>
             <el-form-item label="存储区域">
-              <el-input v-model="config.qiniu.zone" />
+              <el-input v-model.trim="config.qiniu.zone" placeholder="请输入存储区域" />
             </el-form-item>
             <el-form-item label="空间名称">
-              <el-input v-model="config.qiniu.bucket" />
+              <el-input v-model.trim="config.qiniu.bucket" placeholder="请输入空间名称" />
             </el-form-item>
             <el-form-item label="CDN加速域名">
-              <el-input v-model="config.qiniu.imgPath" />
+              <el-input v-model.trim="config.qiniu['img-path']" placeholder="请输入CDN加速域名" />
             </el-form-item>
             <el-form-item label="是否使用https">
-              <el-checkbox v-model="config.qiniu.useHttps">开启</el-checkbox>
+              <el-switch v-model="config.qiniu['use-https']">开启</el-switch>
             </el-form-item>
             <el-form-item label="accessKey">
-              <el-input v-model="config.qiniu.accessKey" />
+              <el-input v-model.trim="config.qiniu['access-key']" placeholder="请输入accessKey" />
             </el-form-item>
             <el-form-item label="secretKey">
-              <el-input v-model="config.qiniu.secretKey" />
+              <el-input v-model.trim="config.qiniu['secret-key']" placeholder="请输入secretKey" />
             </el-form-item>
             <el-form-item label="上传是否使用CDN上传加速">
-              <el-checkbox v-model="config.qiniu.useCdnDomains">开启</el-checkbox>
+              <el-switch v-model="config.qiniu['use-cdn-domains']" />
             </el-form-item>
           </template>
-          <template v-if="config.system.ossType === 'tencent-cos'">
+          <template v-if="config.system['oss-type'] === 'tencent-cos'">
             <h2>腾讯云COS上传配置</h2>
-            <el-form-item label="bucket">
-              <el-input v-model="config.tencentCOS.bucket" />
+            <el-form-item label="存储桶名称">
+              <el-input v-model.trim="config['tencent-cos']['bucket']" placeholder="请输入存储桶名称"/>
             </el-form-item>
-            <el-form-item label="region">
-              <el-input v-model="config.tencentCOS.region" />
+            <el-form-item label="所属地域">
+              <el-input v-model.trim="config['tencent-cos'].region" placeholder="请输入所属地域"/>
             </el-form-item>
             <el-form-item label="secretID">
-              <el-input v-model="config.tencentCOS.secretID" />
+              <el-input v-model.trim="config['tencent-cos']['secret-id']" placeholder="请输入secretID"/>
             </el-form-item>
             <el-form-item label="secretKey">
-              <el-input v-model="config.tencentCOS.secretKey" />
+              <el-input v-model.trim="config['tencent-cos']['secret-key']" placeholder="请输入secretKey"/>
             </el-form-item>
-            <el-form-item label="pathPrefix">
-              <el-input v-model="config.tencentCOS.pathPrefix" />
+            <el-form-item label="路径前缀">
+              <el-input v-model.trim="config['tencent-cos']['path-prefix']" placeholder="请输入路径前缀"/>
             </el-form-item>
-            <el-form-item label="baseURL">
-              <el-input v-model="config.tencentCOS.baseURL" />
+            <el-form-item label="访问域名">
+              <el-input v-model.trim="config['tencent-cos']['base-url']" placeholder="请输入访问域名"/>
             </el-form-item>
           </template>
-          <template v-if="config.system.ossType === 'aliyun-oss'">
+          <template v-if="config.system['oss-type'] === 'aliyun-oss'">
             <h2>阿里云OSS上传配置</h2>
-            <el-form-item label="endpoint">
-              <el-input v-model="config.aliyunOSS.endpoint" />
+            <el-form-item label="区域">
+              <el-input v-model.trim="config['aliyun-oss'].endpoint" placeholder="请输入区域"/>
             </el-form-item>
             <el-form-item label="accessKeyId">
-              <el-input v-model="config.aliyunOSS.accessKeyId" />
+              <el-input v-model.trim="config['aliyun-oss']['access-key-id']" placeholder="请输入accessKeyId"/>
             </el-form-item>
             <el-form-item label="accessKeySecret">
-              <el-input v-model="config.aliyunOSS.accessKeySecret" />
+              <el-input v-model.trim="config['aliyun-oss']['access-key-secret']" placeholder="请输入accessKeySecret"/>
             </el-form-item>
-            <el-form-item label="bucketName">
-              <el-input v-model="config.aliyunOSS.bucketName" />
+            <el-form-item label="存储桶名称">
+              <el-input v-model.trim="config['aliyun-oss']['bucket-name']" placeholder="请输入存储桶名称" />
             </el-form-item>
-            <el-form-item label="bucketUrl">
-              <el-input v-model="config.aliyunOSS.bucketUrl" />
+            <el-form-item label="访问域名">
+              <el-input v-model.trim="config['aliyun-oss']['bucket-url']" placeholder="请输入访问域名" />
             </el-form-item>
           </template>
-          <template v-if="config.system.ossType === 'huawei-obs'">
-            <h2>华为云Obs上传配置</h2>
-            <el-form-item label="path">
-              <el-input v-model="config.huaWeiObs.path" />
+          <template v-if="config.system['oss-type'] === 'huawei-obs'">
+            <h2>华为云OBS上传配置</h2>
+            <el-form-item label="路径">
+              <el-input v-model.trim="config['hua-wei-obs'].path" placeholder="请输入路径" />
             </el-form-item>
-            <el-form-item label="bucket">
-              <el-input v-model="config.huaWeiObs.bucket" />
+            <el-form-item label="存储桶名称">
+              <el-input v-model.trim="config['hua-wei-obs'].bucket" placeholder="请输入存储桶名称" />
             </el-form-item>
-            <el-form-item label="endpoint">
-              <el-input v-model="config.huaWeiObs.endpoint" />
+            <el-form-item label="区域">
+              <el-input v-model.trim="config['hua-wei-obs'].endpoint" placeholder="请输入区域" />
             </el-form-item>
             <el-form-item label="accessKey">
-              <el-input v-model="config.huaWeiObs.AccessKey" />
+              <el-input v-model.trim="config['hua-wei-obs']['access-key']" placeholder="请输入accessKey" />
             </el-form-item>
             <el-form-item label="secretKey">
-              <el-input v-model="config.huaWeiObs.secretKey" />
+              <el-input v-model.trim="config['hua-wei-obs']['secret-key']" placeholder="请输入secretKey" />
+            </el-form-item>
+          </template>
+          <template v-if="config.system['oss-type'] === 'cloudflare-r2'">
+            <h2>Cloudflare R2上传配置</h2>
+            <el-form-item label="路径">
+              <el-input v-model.trim="config['cloudflare-r2'].path" placeholder="请输入路径" />
+            </el-form-item>
+            <el-form-item label="存储桶名称">
+              <el-input v-model.trim="config['cloudflare-r2'].bucket" placeholder="请输入存储桶名称" />
+            </el-form-item>
+            <el-form-item label="Base URL">
+              <el-input v-model.trim="config['cloudflare-r2']['base-url']" placeholder="请输入Base URL" />
+            </el-form-item>
+            <el-form-item label="Account ID">
+              <el-input v-model.trim="config['cloudflare-r2']['account-id']" placeholder="请输入secretKey" />
+            </el-form-item>
+            <el-form-item label="Access Key ID">
+              <el-input v-model.trim="config['cloudflare-r2']['access-key-id']" placeholder="请输入secretKey" />
+            </el-form-item>
+            <el-form-item label="Secret Access Key">
+              <el-input v-model.trim="config['cloudflare-r2']['secret-access-key']" placeholder="请输入secretKey" />
             </el-form-item>
           </template>
 
-        </el-collapse-item>
-
-        <el-collapse-item title="Excel上传配置" name="11">
+        </el-tab-pane>
+        <el-tab-pane
+            label="Excel上传配置"
+            name="11"
+            class="mt-3.5"
+        >
           <el-form-item label="合成目标地址">
-            <el-input v-model="config.excel.dir" />
+            <el-input v-model.trim="config.excel.dir" placeholder="请输入合成目标地址" />
           </el-form-item>
-        </el-collapse-item>
-
-        <el-collapse-item title="自动化代码配置" name="12">
+        </el-tab-pane>
+        <el-tab-pane
+            label="自动化代码配置"
+            name="12"
+            class="mt-3.5"
+        >
           <el-form-item label="是否自动重启(linux)">
-            <el-checkbox v-model="config.autoCode.transferRestart" />
+            <el-switch v-model="config.autocode['transfer-restart']"/>
           </el-form-item>
           <el-form-item label="root(项目根路径)">
-            <el-input v-model="config.autoCode.root" disabled />
+            <el-input
+                v-model="config.autocode.root"
+                disabled
+            />
           </el-form-item>
           <el-form-item label="Server(后端代码地址)">
-            <el-input v-model="config.autoCode.transferRestart" />
+            <el-input v-model.trim="config.autocode['server']" placeholder="请输入后端代码地址"/>
           </el-form-item>
           <el-form-item label="SApi(后端api文件夹地址)">
-            <el-input v-model="config.autoCode.serverApi" />
+            <el-input v-model.trim="config.autocode['server-api']" placeholder="请输入后端api文件夹地址"/>
           </el-form-item>
           <el-form-item label="SInitialize(后端Initialize文件夹)">
-            <el-input v-model="config.autoCode.serverInitialize" />
+            <el-input v-model.trim="config.autocode['server-initialize']" placeholder="请输入后端Initialize文件夹"/>
           </el-form-item>
           <el-form-item label="SModel(后端Model文件地址)">
-            <el-input v-model="config.autoCode.serverModel" />
+            <el-input v-model.trim="config.autocode['server-model']" placeholder="请输入后端Model文件地址"/>
           </el-form-item>
           <el-form-item label="SRequest(后端Request文件夹地址)">
-            <el-input v-model="config.autoCode.serverRequest" />
+            <el-input v-model.trim="config.autocode['server-request']" placeholder="请输入后端Request文件夹地址"/>
           </el-form-item>
           <el-form-item label="SRouter(后端Router文件夹地址)">
-            <el-input v-model="config.autoCode.serverRouter" />
+            <el-input v-model.trim="config.autocode['server-router']" placeholder="请输入后端Router文件夹地址"/>
           </el-form-item>
           <el-form-item label="SService(后端Service文件夹地址)">
-            <el-input v-model="config.autoCode.serverService" />
+            <el-input v-model.trim="config.autocode['server-service']" placeholder="请输入后端Service文件夹地址"/>
           </el-form-item>
           <el-form-item label="Web(前端文件夹地址)">
-            <el-input v-model="config.autoCode.web" />
+            <el-input v-model.trim="config.autocode.web" placeholder="请输入前端文件夹地址"/>
           </el-form-item>
           <el-form-item label="WApi(后端WApi文件夹地址)">
-            <el-input v-model="config.autoCode.webApi" />
+            <el-input v-model.trim="config.autocode['web-api']" placeholder="请输入后端WApi文件夹地址"/>
           </el-form-item>
           <el-form-item label="WForm(后端WForm文件夹地址)">
-            <el-input v-model="config.autoCode.webForm" />
+            <el-input v-model.trim="config.autocode['web-form']" placeholder="请输入后端WForm文件夹地址"/>
           </el-form-item>
           <el-form-item label="WTable(后端WTable文件夹地址)">
-            <el-input v-model="config.autoCode.webTable" />
+            <el-input v-model.trim="config.autocode['web-table']" placeholder="请输入后端WTable文件夹地址"/>
           </el-form-item>
-        </el-collapse-item>
-
-        <el-collapse-item title="Timer(定时任务)" name="13">
-          <el-form-item label="Start（是否启用）">
-            <el-select v-model="config.timer.wTable" />
-          </el-form-item>
-          <el-form-item label="Spec(CRON表达式)">
-            <el-input v-model="config.timer.spec" />
-          </el-form-item>
-          <template v-for="(item,k) in config.timer.detail">
-            <div v-for="(key,k2) in item" :key="k2">
-              <el-form-item :key="k+k2" :label="k2">
-                <el-input v-model="item[k2]" />
-              </el-form-item>
-            </div>
-          </template>
-        </el-collapse-item>
-      </el-collapse>
+        </el-tab-pane>
+      </el-tabs>
     </el-form>
-    <div class="gva-btn-list">
-      <el-button type="primary" size="small" @click="update">立即更新</el-button>
-      <el-button type="primary" size="small" @click="reload">重启服务（开发中）</el-button>
+    <div class="mt-4">
+      <el-button
+          type="primary"
+          @click="update"
+      >立即更新
+      </el-button>
+      <el-button
+          type="primary"
+          @click="reload"
+      >重启服务
+      </el-button>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Config'
-}
-</script>
 <script setup>
-import { getSystemConfig, setSystemConfig } from '@/api/system'
+import { getSystemConfig, reloadSystem, setSystemConfig } from '@/api/system'
+import { ref } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { Minus, Plus } from '@element-plus/icons-vue'
 import { emailTest } from '@/api/email'
-import { ref, reactive } from 'vue'
-import { ElMessage } from 'element-plus'
+import {CreateUUID} from "@/utils/format";
 
-const activeNames = reactive([])
+defineOptions({
+  name: 'Config',
+})
+
+const activeNames = ref('1')
 const config = ref({
   system: {
-    iplimitCount: 0,
-    iplimitTime: 0
+    'iplimit-count': 0,
+    'iplimit-time': 0,
   },
   jwt: {},
-  casbin: {},
   mysql: {},
+  mssql: {},
+  sqlite: {},
   pgsql: {},
+  oracle: {},
   excel: {},
-  autoCode: {},
+  autocode: {},
   redis: {},
+  mongo: {
+    coll: '',
+    options: '',
+    database: '',
+    username: '',
+    password: '',
+    'min-pool-size': '',
+    'max-pool-size': '',
+    'socket-timeout-ms': '',
+    'connect-timeout-ms': '',
+    'is-zap': false,
+    hosts: [
+      {
+        host: '',
+        port: '',
+      },
+    ],
+  },
   qiniu: {},
-  tencentCOS: {},
-  aliyunOSS: {},
-  huaWeiObs: {},
+  'tencent-cos': {},
+  'aliyun-oss': {},
+  'hua-wei-obs': {},
+  'cloudflare-r2': {},
   captcha: {},
   zap: {},
   local: {},
   email: {},
   timer: {
-    detail: {}
-  }
+    detail: {},
+  },
 })
 
 const initForm = async() => {
@@ -386,17 +742,44 @@ const initForm = async() => {
   }
 }
 initForm()
-const reload = () => {}
+const reload = () => {
+  ElMessageBox.confirm(
+      '确定要重启服务?',
+      '警告',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      },
+  )
+      .then(async() => {
+        const res = await reloadSystem()
+        if (res.code === 0) {
+          ElMessage({
+            type: 'success',
+            message: '操作成功',
+          })
+        }
+      })
+      .catch(() => {
+        ElMessage({
+          type: 'info',
+          message: '取消重启',
+        })
+      })
+}
+
 const update = async() => {
   const res = await setSystemConfig({ config: config.value })
   if (res.code === 0) {
     ElMessage({
       type: 'success',
-      message: '配置文件设置成功'
+      message: '配置文件设置成功',
     })
     await initForm()
   }
 }
+
 const email = async() => {
   const res = await emailTest()
   if (res.code === 0) {
@@ -413,24 +796,28 @@ const email = async() => {
   }
 }
 
+const getUUID = () => {
+  config.value.jwt['signing-key'] = CreateUUID()
+}
+
+const addNode = () => {
+  config.value.mongo.hosts.push({
+    host: '',
+    port: '',
+  })
+}
+
+const removeNode = (index) => {
+  config.value.mongo.hosts.splice(index, 1)
+}
+
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .system {
-  background: #fff;
-  padding:36px;
-  border-radius: 2px;
+  @apply bg-white p-9 rounded dark:bg-slate-900;
   h2 {
-    padding: 10px;
-    margin: 10px 0;
-    font-size: 16px;
-    box-shadow: -4px 0px 0px 0px #e7e8e8;
-  }
-  ::v-deep(.el-input-number__increase){
-    top:5px !important;
-  }
-  .gva-btn-list{
-    margin-top:16px;
+    @apply p-2.5 my-2.5 text-lg shadow;
   }
 }
 </style>

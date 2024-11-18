@@ -3,19 +3,20 @@ package system
 import (
 	"errors"
 
+	"github.com/flipped-aurora/gin-vue-admin/server/global"
+	"github.com/flipped-aurora/gin-vue-admin/server/model/system"
 	"gorm.io/gorm"
-	"smart-admin/server/global"
-	"smart-admin/server/model/system"
-	"smart-admin/server/model/system/request"
 )
 
 //@author: [piexlmax](https://github.com/piexlmax)
-//@function: DeleteSysDictionary
+//@function: CreateSysDictionary
 //@description: 创建字典数据
 //@param: sysDictionary model.SysDictionary
 //@return: err error
 
 type DictionaryService struct{}
+
+var DictionaryServiceApp = new(DictionaryService)
 
 func (dictionaryService *DictionaryService) CreateSysDictionary(sysDictionary system.SysDictionary) (err error) {
 	if (!errors.Is(global.GVA_DB.First(&system.SysDictionary{}, "type = ?", sysDictionary.Type).Error, gorm.ErrRecordNotFound)) {
@@ -64,13 +65,17 @@ func (dictionaryService *DictionaryService) UpdateSysDictionary(sysDictionary *s
 		"Status": sysDictionary.Status,
 		"Desc":   sysDictionary.Desc,
 	}
-	db := global.GVA_DB.Where("id = ?", sysDictionary.ID).First(&dict)
+	err = global.GVA_DB.Where("id = ?", sysDictionary.ID).First(&dict).Error
+	if err != nil {
+		global.GVA_LOG.Debug(err.Error())
+		return errors.New("查询字典数据失败")
+	}
 	if dict.Type != sysDictionary.Type {
 		if !errors.Is(global.GVA_DB.First(&system.SysDictionary{}, "type = ?", sysDictionary.Type).Error, gorm.ErrRecordNotFound) {
 			return errors.New("存在相同的type，不允许创建")
 		}
 	}
-	err = db.Updates(sysDictionaryMap).Error
+	err = global.GVA_DB.Model(&dict).Updates(sysDictionaryMap).Error
 	return err
 }
 
@@ -80,8 +85,16 @@ func (dictionaryService *DictionaryService) UpdateSysDictionary(sysDictionary *s
 //@param: Type string, Id uint
 //@return: err error, sysDictionary model.SysDictionary
 
-func (dictionaryService *DictionaryService) GetSysDictionary(Type string, Id uint) (err error, sysDictionary system.SysDictionary) {
-	err = global.GVA_DB.Where("type = ? OR id = ? and status = ?", Type, Id, true).Preload("SysDictionaryDetails", "status = ?", true).First(&sysDictionary).Error
+func (dictionaryService *DictionaryService) GetSysDictionary(Type string, Id uint, status *bool) (sysDictionary system.SysDictionary, err error) {
+	var flag = false
+	if status == nil {
+		flag = true
+	} else {
+		flag = *status
+	}
+	err = global.GVA_DB.Where("(type = ? OR id = ?) and status = ?", Type, Id, flag).Preload("SysDictionaryDetails", func(db *gorm.DB) *gorm.DB {
+		return db.Where("status = ?", true).Order("sort")
+	}).First(&sysDictionary).Error
 	return
 }
 
@@ -92,29 +105,8 @@ func (dictionaryService *DictionaryService) GetSysDictionary(Type string, Id uin
 //@param: info request.SysDictionarySearch
 //@return: err error, list interface{}, total int64
 
-func (dictionaryService *DictionaryService) GetSysDictionaryInfoList(info request.SysDictionarySearch) (err error, list interface{}, total int64) {
-	limit := info.PageSize
-	offset := info.PageSize * (info.Page - 1)
-	// 创建db
-	db := global.GVA_DB.Model(&system.SysDictionary{})
+func (dictionaryService *DictionaryService) GetSysDictionaryInfoList() (list interface{}, err error) {
 	var sysDictionarys []system.SysDictionary
-	// 如果有条件搜索 下方会自动创建搜索语句
-	if info.Name != "" {
-		db = db.Where("`name` LIKE ?", "%"+info.Name+"%")
-	}
-	if info.Type != "" {
-		db = db.Where("`type` LIKE ?", "%"+info.Type+"%")
-	}
-	if info.Status != nil {
-		db = db.Where("`status` = ?", info.Status)
-	}
-	if info.Desc != "" {
-		db = db.Where("`desc` LIKE ?", "%"+info.Desc+"%")
-	}
-	err = db.Count(&total).Error
-	if err != nil {
-		return
-	}
-	err = db.Limit(limit).Offset(offset).Find(&sysDictionarys).Error
-	return err, sysDictionarys, total
+	err = global.GVA_DB.Find(&sysDictionarys).Error
+	return sysDictionarys, err
 }

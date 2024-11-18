@@ -1,6 +1,6 @@
 package response
 
-import "smart-admin/server/model/example"
+import "github.com/flipped-aurora/gin-vue-admin/server/model/example"
 
 type FilePathResponse struct {
 	FilePath string `json:"filePath"`

@@ -1,32 +1,62 @@
 <template>
   <div>
-    <div class="clearflex">
-      <el-button class="fl-right" size="small" type="primary" @click="authApiEnter">确 定</el-button>
+    <div class="sticky top-0.5 z-10 flex space-x-2">
+      <el-input
+          v-model="filterTextName"
+          class="flex-1"
+          placeholder="筛选名字"
+      />
+      <el-input
+          v-model="filterTextPath"
+          class="flex-1"
+          placeholder="筛选路径"
+      />
+      <el-button
+        class="float-right"
+        type="primary"
+        @click="authApiEnter"
+      >确 定</el-button>
     </div>
-    <el-tree
-      ref="apiTree"
-      :data="apiTreeData"
-      :default-checked-keys="apiTreeIds"
-      :props="apiDefaultProps"
-      default-expand-all
-      highlight-current
-      node-key="onlyId"
-      show-checkbox
-      @check="nodeChange"
-    />
+    <div class="tree-content">
+      <el-scrollbar>
+        <el-tree
+            ref="apiTree"
+            :data="apiTreeData"
+            :default-checked-keys="apiTreeIds"
+            :props="apiDefaultProps"
+            default-expand-all
+            highlight-current
+            node-key="onlyId"
+            show-checkbox
+            :filter-node-method="filterNode"
+            @check="nodeChange"
+        >
+          <template #default="{ node, data }">
+            <div class="flex items-center justify-between w-full pr-1">
+              <span>{{ data.description }} </span>
+              <el-tooltip
+              :content="data.path"
+              >
+                <span class="max-w-[240px] break-all overflow-ellipsis overflow-hidden">{{data.path}}</span>
+              </el-tooltip>
+            </div>
+          </template>
+        </el-tree>
+      </el-scrollbar>
+    </div>
   </div>
 </template>
-<script>
-export default {
-  name: 'Apis',
-}
-</script>
 
 <script setup>
 import { getAllApis } from '@/api/api'
 import { UpdateCasbin, getPolicyPathByAuthorityId } from '@/api/casbin'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
+
+defineOptions({
+  name: 'Apis',
+})
+
 const props = defineProps({
   row: {
     default: function() {
@@ -40,7 +70,8 @@ const apiDefaultProps = ref({
   children: 'children',
   label: 'description'
 })
-
+const filterTextName = ref('')
+const filterTextPath = ref('')
 const apiTreeData = ref([])
 const apiTreeIds = ref([])
 const activeUserId = ref('')
@@ -118,6 +149,25 @@ const authApiEnter = async() => {
 defineExpose({
   needConfirm,
   enterAndNext
+})
+
+const filterNode = (value, data) => {
+  if (!filterTextName.value && !filterTextPath.value) return true
+  let matchesName,matchesPath;
+  if (!filterTextName.value){
+    matchesName = true
+  }else {
+    matchesName = data.description && data.description.includes(filterTextName.value)
+  }
+  if (!filterTextPath.value){
+    matchesPath = true
+  }else {
+    matchesPath = data.path && data.path.includes(filterTextPath.value)
+  }
+  return matchesName && matchesPath
+}
+watch([filterTextName, filterTextPath], () => {
+  apiTree.value.filter('')
 })
 
 </script>

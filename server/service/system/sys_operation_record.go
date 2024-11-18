@@ -1,10 +1,10 @@
 package system
 
 import (
-	"smart-admin/server/global"
-	"smart-admin/server/model/common/request"
-	"smart-admin/server/model/system"
-	systemReq "smart-admin/server/model/system/request"
+	"github.com/flipped-aurora/gin-vue-admin/server/global"
+	"github.com/flipped-aurora/gin-vue-admin/server/model/common/request"
+	"github.com/flipped-aurora/gin-vue-admin/server/model/system"
+	systemReq "github.com/flipped-aurora/gin-vue-admin/server/model/system/request"
 )
 
 //@author: [granty1](https://github.com/granty1)
@@ -14,6 +14,8 @@ import (
 //@return: err error
 
 type OperationRecordService struct{}
+
+var OperationRecordServiceApp = new(OperationRecordService)
 
 func (operationRecordService *OperationRecordService) CreateSysOperationRecord(sysOperationRecord system.SysOperationRecord) (err error) {
 	err = global.GVA_DB.Create(&sysOperationRecord).Error
@@ -44,12 +46,12 @@ func (operationRecordService *OperationRecordService) DeleteSysOperationRecord(s
 }
 
 //@author: [granty1](https://github.com/granty1)
-//@function: DeleteSysOperationRecord
+//@function: GetSysOperationRecord
 //@description: 根据id获取单条操作记录
 //@param: id uint
-//@return: err error, sysOperationRecord model.SysOperationRecord
+//@return: sysOperationRecord system.SysOperationRecord, err error
 
-func (operationRecordService *OperationRecordService) GetSysOperationRecord(id uint) (err error, sysOperationRecord system.SysOperationRecord) {
+func (operationRecordService *OperationRecordService) GetSysOperationRecord(id uint) (sysOperationRecord system.SysOperationRecord, err error) {
 	err = global.GVA_DB.Where("id = ?", id).First(&sysOperationRecord).Error
 	return
 }
@@ -59,9 +61,9 @@ func (operationRecordService *OperationRecordService) GetSysOperationRecord(id u
 //@function: GetSysOperationRecordInfoList
 //@description: 分页获取操作记录列表
 //@param: info systemReq.SysOperationRecordSearch
-//@return: err error, list interface{}, total int64
+//@return: list interface{}, total int64, err error
 
-func (operationRecordService *OperationRecordService) GetSysOperationRecordInfoList(info systemReq.SysOperationRecordSearch) (err error, list interface{}, total int64) {
+func (operationRecordService *OperationRecordService) GetSysOperationRecordInfoList(info systemReq.SysOperationRecordSearch) (list interface{}, total int64, err error) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	// 创建db
@@ -77,10 +79,11 @@ func (operationRecordService *OperationRecordService) GetSysOperationRecordInfoL
 	if info.Status != 0 {
 		db = db.Where("status = ?", info.Status)
 	}
+
 	err = db.Count(&total).Error
 	if err != nil {
 		return
 	}
 	err = db.Order("id desc").Limit(limit).Offset(offset).Preload("User").Find(&sysOperationRecords).Error
-	return err, sysOperationRecords, total
+	return sysOperationRecords, total, err
 }

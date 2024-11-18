@@ -1,19 +1,17 @@
 package router
 
 import (
-	"smart-admin/server/router/autocode"
-	"smart-admin/server/router/compare"
-	"smart-admin/server/router/example"
-	"smart-admin/server/router/system"
-	"smart-admin/server/router/twitter"
+	"github.com/flipped-aurora/gin-vue-admin/server/router/Binance"
+	"github.com/flipped-aurora/gin-vue-admin/server/router/Twitter"
+	"github.com/flipped-aurora/gin-vue-admin/server/router/example"
+	"github.com/flipped-aurora/gin-vue-admin/server/router/system"
 )
 
-type RouterGroup struct {
-	System   system.RouterGroup
-	Example  example.RouterGroup
-	Autocode autocode.RouterGroup
-	Twitter  twitter.RouterGroup
-	Compare  compare.RouterGroup
-}
-
 var RouterGroupApp = new(RouterGroup)
+
+type RouterGroup struct {
+	System  system.RouterGroup
+	Example example.RouterGroup
+	Twitter Twitter.RouterGroup
+	Binance Binance.RouterGroup
+}

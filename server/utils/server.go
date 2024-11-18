@@ -1,12 +1,13 @@
 package utils
 
 import (
+	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"runtime"
 	"time"
 
-	"github.com/shirou/gopsutil/cpu"
-	"github.com/shirou/gopsutil/disk"
-	"github.com/shirou/gopsutil/mem"
+	"github.com/shirou/gopsutil/v3/cpu"
+	"github.com/shirou/gopsutil/v3/disk"
+	"github.com/shirou/gopsutil/v3/mem"
 )
 
 const (
@@ -19,8 +20,8 @@ const (
 type Server struct {
 	Os   Os   `json:"os"`
 	Cpu  Cpu  `json:"cpu"`
-	Rrm  Rrm  `json:"ram"`
-	Disk Disk `json:"disk"`
+	Ram  Ram  `json:"ram"`
+	Disk []Disk `json:"disk"`
 }
 
 type Os struct {
@@ -36,13 +37,14 @@ type Cpu struct {
 	Cores int       `json:"cores"`
 }
 
-type Rrm struct {
+type Ram struct {
 	UsedMB      int `json:"usedMb"`
 	TotalMB     int `json:"totalMb"`
 	UsedPercent int `json:"usedPercent"`
 }
 
 type Disk struct {
+	MountPoint  string `json:"mountPoint"`
 	UsedMB      int `json:"usedMb"`
 	UsedGB      int `json:"usedGb"`
 	TotalMB     int `json:"totalMb"`
@@ -85,10 +87,10 @@ func InitCPU() (c Cpu, err error) {
 
 //@author: [SliverHorn](https://github.com/SliverHorn)
 //@function: InitRAM
-//@description: ARM信息
-//@return: r Rrm, err error
+//@description: RAM信息
+//@return: r Ram, err error
 
-func InitRAM() (r Rrm, err error) {
+func InitRAM() (r Ram, err error) {
 	if u, err := mem.VirtualMemory(); err != nil {
 		return r, err
 	} else {
@@ -104,15 +106,21 @@ func InitRAM() (r Rrm, err error) {
 //@description: 硬盘信息
 //@return: d Disk, err error
 
-func InitDisk() (d Disk, err error) {
-	if u, err := disk.Usage("/"); err != nil {
-		return d, err
-	} else {
-		d.UsedMB = int(u.Used) / MB
-		d.UsedGB = int(u.Used) / GB
-		d.TotalMB = int(u.Total) / MB
-		d.TotalGB = int(u.Total) / GB
-		d.UsedPercent = int(u.UsedPercent)
+func InitDisk() (d []Disk, err error) {
+	for i := range global.GVA_CONFIG.DiskList {
+		mp := global.GVA_CONFIG.DiskList[i].MountPoint
+		if u, err := disk.Usage(mp); err != nil {
+			return d, err
+		} else {
+			d = append(d, Disk{
+				MountPoint:  mp,
+				UsedMB:      int(u.Used) / MB,
+				UsedGB:      int(u.Used) / GB,
+				TotalMB:     int(u.Total) / MB,
+				TotalGB:     int(u.Total) / GB,
+				UsedPercent: int(u.UsedPercent),
+			})
+		}
 	}
 	return d, nil
 }

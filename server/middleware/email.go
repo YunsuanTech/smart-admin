@@ -1,18 +1,19 @@
 package middleware
 
 import (
-	"io/ioutil"
+	"bytes"
+	"io"
 	"strconv"
 	"time"
 
-	"smart-admin/server/plugin/email/utils"
-	utils2 "smart-admin/server/utils"
+	"github.com/flipped-aurora/gin-vue-admin/server/plugin/email/utils"
+	utils2 "github.com/flipped-aurora/gin-vue-admin/server/utils"
 
+	"github.com/flipped-aurora/gin-vue-admin/server/global"
+	"github.com/flipped-aurora/gin-vue-admin/server/model/system"
+	"github.com/flipped-aurora/gin-vue-admin/server/service"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"smart-admin/server/global"
-	"smart-admin/server/model/system"
-	"smart-admin/server/service"
 )
 
 var userService = service.ServiceGroupApp.SystemServiceGroup.UserService
@@ -25,13 +26,15 @@ func ErrorToEmail() gin.HandlerFunc {
 			username = claims.Username
 		} else {
 			id, _ := strconv.Atoi(c.Request.Header.Get("x-user-id"))
-			err, user := userService.FindUserById(id)
+			user, err := userService.FindUserById(id)
 			if err != nil {
 				username = "Unknown"
 			}
 			username = user.Username
 		}
-		body, _ := ioutil.ReadAll(c.Request.Body)
+		body, _ := io.ReadAll(c.Request.Body)
+		// 再重新写回请求体body中，ioutil.ReadAll会清空c.Request.Body中的数据
+		c.Request.Body = io.NopCloser(bytes.NewBuffer(body))
 		record := system.SysOperationRecord{
 			Ip:     c.ClientIP(),
 			Method: c.Request.Method,

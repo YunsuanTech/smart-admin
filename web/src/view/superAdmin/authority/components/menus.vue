@@ -1,61 +1,89 @@
 <template>
   <div>
-    <div class="clearflex">
-      <el-button class="fl-right" size="small" type="primary" @click="relation">确 定</el-button>
+    <div class="sticky top-0.5 z-10">
+      <el-input
+        v-model="filterText"
+        class="w-3/5"
+        placeholder="筛选"
+      />
+      <el-button
+        class="float-right"
+        type="primary"
+        @click="relation"
+      >确 定</el-button>
     </div>
-    <el-tree
-      ref="menuTree"
-      :data="menuTreeData"
-      :default-checked-keys="menuTreeIds"
-      :props="menuDefaultProps"
-      default-expand-all
-      highlight-current
-      node-key="ID"
-      show-checkbox
-      @check="nodeChange"
+    <div class="tree-content clear-both">
+      <el-scrollbar>
+        <el-tree
+          ref="menuTree"
+          :data="menuTreeData"
+          :default-checked-keys="menuTreeIds"
+          :props="menuDefaultProps"
+          default-expand-all
+          highlight-current
+          node-key="ID"
+          show-checkbox
+          :filter-node-method="filterNode"
+          @check="nodeChange"
+        >
+          <template #default="{ node , data }">
+            <span class="custom-tree-node">
+              <span>{{ node.label }}</span>
+              <span v-if="node.checked">
+                <el-button
+                  type="primary"
+                  link
+                  :style="{color:row.defaultRouter === data.name?'#E6A23C':'#85ce61'}"
+                  @click="() => setDefault(data)"
+                >
+                  {{ row.defaultRouter === data.name?"首页":"设为首页" }}
+                </el-button>
+              </span>
+              <span v-if="data.menuBtn.length">
+                <el-button
+                  type="primary"
+                  link
+                  @click="() => OpenBtn(data)"
+                >
+                  分配按钮
+                </el-button>
+              </span>
+            </span>
+          </template>
+        </el-tree>
+      </el-scrollbar>
+    </div>
+    <el-dialog
+      v-model="btnVisible"
+      title="分配按钮"
+      destroy-on-close
     >
-      <template #default="{ node , data }">
-        <span class="custom-tree-node">
-          <span>{{ node.label }}</span>
-          <span>
-            <el-button
-              type="text"
-              size="small"
-              :style="{color:row.defaultRouter === data.name?'#E6A23C':'#85ce61'}"
-              :disabled="!node.checked"
-              @click="() => setDefault(data)"
-            >
-              {{ row.defaultRouter === data.name?"首页":"设为首页" }}
-            </el-button>
-          </span>
-          <span v-if="data.menuBtn.length">
-            <el-button
-              type="text"
-              size="small"
-              @click="() => OpenBtn(data)"
-            >
-              分配按钮
-            </el-button>
-          </span>
-        </span>
-      </template>
-    </el-tree>
-
-    <el-dialog v-model="btnVisible" title="分配按钮" destroy-on-close>
       <el-table
         ref="btnTableRef"
         :data="btnData"
         row-key="ID"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55" />
-        <el-table-column label="按钮名称" prop="name" />
-        <el-table-column label="按钮备注" prop="desc" />
+        <el-table-column
+          type="selection"
+          width="55"
+        />
+        <el-table-column
+          label="按钮名称"
+          prop="name"
+        />
+        <el-table-column
+          label="按钮备注"
+          prop="desc"
+        />
       </el-table>
       <template #footer>
         <div class="dialog-footer">
-          <el-button size="small" @click="closeDialog">取 消</el-button>
-          <el-button size="small" type="primary" @click="enterDialog">确 定</el-button>
+          <el-button @click="closeDialog">取 消</el-button>
+          <el-button
+            type="primary"
+            @click="enterDialog"
+          >确 定</el-button>
         </div>
       </template>
     </el-dialog>
@@ -68,8 +96,13 @@ import {
   updateAuthority
 } from '@/api/authority'
 import { getAuthorityBtnApi, setAuthorityBtnApi } from '@/api/authorityBtn'
-import { nextTick, ref } from 'vue'
+import { nextTick, ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
+
+defineOptions({
+  name: 'Menus'
+})
+
 const props = defineProps({
   row: {
     default: function() {
@@ -80,7 +113,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['changeRow'])
-
+const filterText = ref('')
 const menuTreeData = ref([])
 const menuTreeIds = ref([])
 const needConfirm = ref(false)
@@ -88,6 +121,9 @@ const menuDefaultProps = ref({
   children: 'children',
   label: function(data) {
     return data.meta.title
+  },
+  disabled: function(data) {
+    return props.row.defaultRouter === data.name
   }
 })
 
@@ -105,6 +141,7 @@ const init = async() => {
     }
   })
   menuTreeIds.value = arr
+
 }
 
 init()
@@ -190,19 +227,22 @@ const enterDialog = async() => {
   }
 }
 
-</script>
-
-<script>
-
-export default {
-  name: 'Menus'
+const filterNode = (value, data) => {
+  if (!value) return true
+  // console.log(data.mate.title)
+  return data.meta.title.indexOf(value) !== -1
 }
+
+watch(filterText, (val) => {
+  menuTree.value.filter(val)
+})
+
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .custom-tree-node{
   span+span{
-    margin-left: 12px;
+    @apply ml-3;
   }
 }
 </style>

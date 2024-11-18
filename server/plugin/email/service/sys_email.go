@@ -1,7 +1,7 @@
 package service
 
 import (
-	"smart-admin/server/plugin/email/utils"
+	"github.com/flipped-aurora/gin-vue-admin/server/plugin/email/utils"
 )
 
 type EmailService struct{}

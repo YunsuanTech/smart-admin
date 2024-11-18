@@ -2,7 +2,7 @@
 package system
 
 import (
-	"smart-admin/server/global"
+	"github.com/flipped-aurora/gin-vue-admin/server/global"
 )
 
 // 如果含有time.Time 请自行import time包
@@ -13,4 +13,8 @@ type SysDictionary struct {
 	Status               *bool                 `json:"status" form:"status" gorm:"column:status;comment:状态"` // 状态
 	Desc                 string                `json:"desc" form:"desc" gorm:"column:desc;comment:描述"`       // 描述
 	SysDictionaryDetails []SysDictionaryDetail `json:"sysDictionaryDetails" form:"sysDictionaryDetails"`
+}
+
+func (SysDictionary) TableName() string {
+	return "sys_dictionaries"
 }
